@@ -239,7 +239,7 @@
             <text macro="locators"/>
             <text macro="page"/>
             <text macro="issued"/>
-            <text variable="note"/>
+            <!--text variable="note"/-->
           </group>
         </if>
         <else-if type="paper-conference speech" match="any">
@@ -249,7 +249,7 @@
             <text macro="issued"/>
             <text macro="locators"/>
             <text macro="page"/>
-            <text variable="note"/>
+            <!--text variable="note"/-->
           </group>
         </else-if>
         <else-if type="report">

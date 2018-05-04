@@ -121,6 +121,6 @@ The orignal tutorials did a great job in explaining the details in seperate tuto
 
       Here is what a rqt gui for dynamic_reconfigure looks like.
 
-      ![rqt](/images/rosparam_handler.png)
+      ![rqt](/assets/images/rosparam_handler.png)
 
       Enjoy!
