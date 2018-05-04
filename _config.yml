@@ -6,7 +6,7 @@
 # `jekyll serve`. If you change this file, please restart the server process.
 
 # Site Settings
-#theme                    : minimal-mistakes-jekyll
+theme                    : minimal-mistakes-jekyll
 minimal_mistakes_skin    : "air" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 locale                   : "en-US"
 title                    : "Yu Zhang's Homepage"
@@ -186,7 +186,6 @@ plugins:
   - jekyll-gist
   - jekyll-feed
   - jemoji
-  - jekyll-scholar
 
 # mimic GitHub Pages with --safe
 whitelist:
@@ -195,7 +194,6 @@ whitelist:
   - jekyll-gist
   - jekyll-feed
   - jemoji
-  - jekyll-scholar
 
 
 # Archives
@@ -241,6 +239,8 @@ collections:
     output: true
     permalink: /:collection/:path/
 
+# for reliable permalink
+breadcrumbs: true  # disabled by default
 
 
 # Defaults
