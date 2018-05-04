@@ -1,6 +1,6 @@
 ---
-title: "The Projects"
-permalink: /_pages/projects
+title: "Projects"
+permalink: /projects/
 layout: splash
 excerpt: "Projects about autonomous driving and autonomous systems."
 header:

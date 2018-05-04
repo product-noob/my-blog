@@ -1,6 +1,6 @@
 ---
-title: "My video collections"
-permalink: /_pages/videos
+title: "Videos"
+permalink: /videos/
 layout: single
 classes: wide
 

@@ -1,6 +1,6 @@
 ---
-title: "I develop autonomous driving software."
-permalink: /_pages/home
+title: "Homepage"
+permalink: /homepage/
 layout: single
 classes: wide
 header:
