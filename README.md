@@ -7,13 +7,13 @@ The default branch is the `source` where I enable the jekyll-scholar plugin. The
 
 
 
-## Sevel interesting changes I have made.  
+## Several interesting changes I have made.  
 
 * Create a bibliography template ([bibtemplate.html](https://github.com/yuzhangbit/yuzhangbit.github.io/blob/source/_layouts/bibtemplate.html)). It display the bibentries, the publishing status and doi.  The corresponding buttons can be customized
 using scss style file ([_buttons.scss](https://github.com/yuzhangbit/yuzhangbit.github.io/blob/source/_sass/minimal-mistakes/_buttons.scss#L101))
 * The ieee citing style is modified.
     * The index is removed.
-    * The title of the paper is hightlighted.
+    * The title of the paper is bold.
     * The initialization of authors' name is disabled.
 
 ## Publish the website
