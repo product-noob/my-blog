@@ -18,7 +18,7 @@ using scss style file ([_buttons.scss](https://github.com/yuzhangbit/yuzhangbit.
 
 ## Publish the website
 
-All the developments go to the `source` branch. When everything is ready, use commands below to publish the website to master branch and push to the remote.
+All the developments go to the `source` branch. When everything is ready, use commands below to publish the website to the `master` branch and push to the remote.
 ```
 rake publish
 ```
