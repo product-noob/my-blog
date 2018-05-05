@@ -80,6 +80,8 @@ analytics:
 # Site Author
 author: Yu Zhang
 
+teaser: /assets/images/default_teaser.jpg
+
 
 
 # Reading Files
@@ -242,7 +244,7 @@ defaults:
     values:
       layout: single
       author_profile: true
-      read_time: true
+      read_time: false
       comments: true
       share: true
       related: true
