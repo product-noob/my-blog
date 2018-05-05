@@ -24,9 +24,3 @@ gallery:
     image_path: /assets/images/cool_s.jpg
     alt: "cool"
 ---
-
-Too much work.
-
-{% include gallery caption="This is a sample gallery to go along with this case study." %}
-
-This is cool.
