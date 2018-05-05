@@ -15,7 +15,7 @@ name                     : "Yu Zhang"
 description              : "My personal website where you can know me and get in touch with me."
 url                      : https://yuzhangbit.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
-repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
+repository               : yuzhangbit/yuzhangbit.github.io # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
@@ -66,13 +66,13 @@ og_image                 : # Open Graph/Twitter default site image
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
-  type                   : Organization # Person or Organization (defaults to Person)
-  name                   : WAVELab # If the user or organization name differs from the site's name
-  links: http://wavelab.uwaterloo.ca/   # An array of links to social media profiles
+  type                   : Person # Person or Organization (defaults to Person)
+  name                   : Yu Zhang # If the user or organization name differs from the site's name
+  links: https://yuzhangbit.github.io   # An array of links to social media profiles
 
 # Analytics
 analytics:
-  provider               : false # false (default), "google", "google-universal", "custom"
+  provider               : google # false (default), "google", "google-universal", "custom"
   google:
     tracking_id          :
 
@@ -80,7 +80,7 @@ analytics:
 # Site Author
 author:
   name             : "Yu Zhang"
-  avatar           : "/assets/images/my_bio.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/assets/images/my_bio_s.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "PhD student @ IVRC at Beijing Institute of Technology, visiting student @ WAVELab at University of Waterloo."
   location         : "Waterloo,ON"
   email            : yu.zhang.bit@gmail.com
