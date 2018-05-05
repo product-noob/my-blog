@@ -1,6 +1,6 @@
 ---
 published: false
-title: jekyll-scholar setup
+title: github pages setup
 classes: wide
 categories:
   - Tools

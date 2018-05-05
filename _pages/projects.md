@@ -16,4 +16,4 @@ toc_label: "My Table of Contents"
 toc_icon: "cog"
 ---
 
-All the projects I involved in are highly related to autonomous driving or autnonomous systems.
+All the projects I get involved in are highly related to autonomous driving or autonomous systems.
