@@ -1,6 +1,6 @@
 ---
 permalink: /videos/
-title: "Videos of My Work"
+title: "videos"
 excerpt: "Foo Bar design system including logo mark, website design, and branding applications."
 classes: wide
 header:
@@ -8,8 +8,6 @@ header:
   teaser: /assets/images/default_teaser.jpg
 sidebar:
   - title: "Role"
-    image: /assets/images/planner_s.jpg
-    image_alt: "logo"
     text: "Roboticists, Autonomous Driving Software Developer"
   #- title: "Responsibilities"
   #  text: "Reuters try PR stupid commenters should isn't a business model"

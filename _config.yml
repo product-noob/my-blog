@@ -272,6 +272,7 @@ scholar:
    bibliography_template: bibtemplate
 
 
+
    use_raw_bibtex_entry: true
    replace_strings: true
 

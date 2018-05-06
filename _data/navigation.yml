@@ -7,7 +7,7 @@ main:
   - title: "Projects"
     url: /projects/
   - title: "Blogs"
-    url: /categories/
+    url: /blogs/
   - title: "Codes"
     url: https://github.com/yuzhangbit
   - title: "Publications"
