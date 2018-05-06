@@ -22,3 +22,6 @@ All the developments go to the `source` branch. When everything is ready, use co
 ```
 rake publish
 ```
+
+
+## Usage Cases Cheat Sheet
