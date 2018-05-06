@@ -54,11 +54,13 @@ scenes:
 
 
 All the projects I get involved in are highly related to autonomous driving or autonomous systems.
-{: .notice--warning}
+{: .notice--info}
 
 
 ## Hybrid Motion Planning Library Development
-
+### Highlights Video
+If you are visiting my website from China, you probably cannot see the video since the my videos are hosted on [vimeo](https://en.wikipedia.org/wiki/Vimeo).
+{: .notice--danger}
 {% include video id="257666203" provider="vimeo" %}
 
 {% include toc %}

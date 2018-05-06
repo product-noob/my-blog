@@ -14,8 +14,8 @@ header:
   overlay_filter: 0.2 # same as adding an opacity of 0.5 to a black background
 ---
 
-Hello! My name is Yu Zhang(张玉).  I am a PhD candidate in School of Mechanical Engineering at Beijing Institute of Technology.
-I was also a visiting student in [WAVELab](http://wavelab.uwaterloo.ca/) at University of Waterloo from 2015 to 2017.
+Hello! My name is Yu Zhang(张玉).  I am a PhD candidate working under the supervision of Prof. Huiyan Chen in School of Mechanical Engineering at Beijing Institute of Technology.
+I was also a visiting student working under the supervision of [Prof. Steven L. Waslander](http://wavelab.uwaterloo.ca/?page_id=593) at [WAVELab](http://wavelab.uwaterloo.ca/) in University of Waterloo from 2015 to 2017.
 {: style="text-align: justify;"}
 
 My research interests cover the area of motion planning and control algorithms, simulation for autonomous cars. My focus is more about optimization-based and sampling-based motion planning algorithms subject to differential contraints.
