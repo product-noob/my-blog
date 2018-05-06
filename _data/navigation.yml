@@ -5,7 +5,7 @@ main:
   - title: "Videos"
     url: /videos/
   - title: "Projects"
-    url: /projects/
+    url: /projects_index/
   - title: "Blogs"
     url: /blogs/
   - title: "Codes"

@@ -1,9 +1,9 @@
 ---
-title: "Projects"
-permalink: /projects/
+title: "HMPL"
+permalink: /hmpl_project/
 layout: splash
 classes: wide
-excerpt: "about autonomous driving and autonomous systems."
+excerpt: "hybrid motion planning library for autonomous driving."
 header:
   overlay_color: "#000"
   overlay_filter: "0.2"
