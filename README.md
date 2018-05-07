@@ -25,3 +25,17 @@ rake publish
 
 
 ## Usage Cases Cheat Sheet
+* embeded pdf viewer
+    ```
+    <embed src="{{ site.url }}{{ site.baseurl }}/assets/pdfs/Yu_Zhang_CV.pdf" type="application/pdf" height="100%" width="100%"/>
+    ```
+    You have to include height and width both to have a full view of pdf. Only enabling one, let's say height, the actual height will not change. The default height is too low. Please refer to `_page/about.md` as an example.
+## To Do
+* notice syntax
+* feature_row and alignment
+* gallery
+* image alignment
+* citations
+* insert images with captions
+* video embedded
+* header overlay 
