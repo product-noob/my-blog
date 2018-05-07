@@ -52,4 +52,4 @@ scenes:
 
 ---
 
-More are comming.
+Coming soon!
