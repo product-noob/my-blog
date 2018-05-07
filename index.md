@@ -13,7 +13,7 @@ header:
   overlay_image: ./assets/images/awesome_s.jpg
   overlay_filter: 0.2 # same as adding an opacity of 0.5 to a black background
 ---
-
+## About Me
 Hello! My name is Yu Zhang(张玉).  I am a PhD candidate working under the supervision of Prof. Huiyan Chen in School of Mechanical Engineering at Beijing Institute of Technology.
 I was also a visiting student working under the supervision of [Prof. Steven L. Waslander](http://wavelab.uwaterloo.ca/?page_id=593) at [WAVELab](http://wavelab.uwaterloo.ca/) in University of Waterloo from 2015 to 2017.
 {: style="text-align: justify;"}
@@ -32,3 +32,4 @@ In 2017, I attended the CES(Consumer Electronics Show) in Las Vegas to show the 
 
 
 ## News
+Coming soon!

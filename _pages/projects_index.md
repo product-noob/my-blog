@@ -32,7 +32,7 @@ feature_autonomoose:
   - image_path: /assets/images/autonomoose.jpg
     alt: "placeholder image 2"
     title: "Autonomoose"
-    excerpt: 'Autonomous driving towards the ultimately level 4 autonomy with the **Autonomoose** platform in all-weather conditions that are specific to Canada in University of Waterloo. This project has attracted several industrial partners such as RENESAS, DENSO and QNX.'
+    excerpt: 'Autonomous driving towards the ultimately level 4 autonomy with the **Autonomoose** platform in all-weather conditions that are specific to Canada in University of Waterloo. This project has attracted several industrial partners such as RENESAS, DENSO, QNX and Huawei.'
     url: "/autonomoose_project"
     btn_label: "Read More"
     btn_class: "btn--primary"
