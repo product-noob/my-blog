@@ -29,3 +29,6 @@ I am also a main contributor to several awesome autonomous driving projects from
 
 In 2017, I attended the CES(Consumer Electronics Show) in Las Vegas to show the functional safety, autonomy of our autonomous driving system running on low power consumption R-Car H3 SoC. It's a big success!
 {: style="text-align: justify;"}
+
+
+## News

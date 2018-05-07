@@ -59,7 +59,7 @@ All the projects I get involved in are highly related to autonomous driving or a
 
 ## Hybrid Motion Planning Library Development
 ### Highlights Video
-If you are visiting my website from China, you probably cannot see the video since the my videos are hosted on [vimeo](https://en.wikipedia.org/wiki/Vimeo).
+If you are visiting my website from China, you probably cannot see the video since all my videos are hosted on [vimeo](https://en.wikipedia.org/wiki/Vimeo).
 {: .notice--danger}
 {% include video id="257666203" provider="vimeo" %}
 
@@ -67,7 +67,7 @@ If you are visiting my website from China, you probably cannot see the video sin
 
 
 ### **Background:**
-<figure style="width: 600px" class="align-left">
+<figure style="width: 450px" class="align-left">
   <img src="{{ site.url }}{{ site.baseurl }}/assets/images/planner_s.jpg" alt="">
   <figcaption>Motion Planning Problems.</figcaption>
 </figure>
