@@ -8,6 +8,7 @@ require "jekyll"
 # Change your GitHub reponame
 GITHUB_REPONAME = "yuzhangbit/yuzhangbit.github.io"
 
+ENV["JEKYLL_ENV"] = "production"
 
 desc "Generate blog files"
 task :generate do

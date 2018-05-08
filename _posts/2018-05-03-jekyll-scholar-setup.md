@@ -1,6 +1,6 @@
 ---
 published: false
-title: github pages setup
+title: Fancy publication List Powered by Jekyll-scholar
 classes: wide
 categories:
   - Tools

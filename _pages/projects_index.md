@@ -69,7 +69,6 @@ feature_row:
 
 {% include feature_row id="feature_convexspeed" type="right" %}
 
-
 {% include feature_row id="feature_autonomoose" type="left" %}
 
 {% include feature_row id="feature_skyline" type="right" %}
