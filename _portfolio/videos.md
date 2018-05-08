@@ -9,16 +9,4 @@ header:
 sidebar:
   - title: "Role"
     text: "Roboticists, Autonomous Driving Software Developer"
-  #- title: "Responsibilities"
-  #  text: "Reuters try PR stupid commenters should isn't a business model"
-gallery:
-  - url: /assets/images/lside_s.jpg
-    image_path: /assets/images/lside_s.jpg
-    alt: "Autonomoose"
-  - url: /assets/images/planner_s.jpg
-    image_path: /assets/images/planner_s.jpg
-    alt: "Lincoln MKZ"
-  - url: /assets/images/cool_s.jpg
-    image_path: /assets/images/cool_s.jpg
-    alt: "cool"
 ---

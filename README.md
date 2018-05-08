@@ -32,10 +32,22 @@ rake publish
     You have to include height and width both to have a full view of pdf. Only enabling one, let's say height, the actual height will not change. The default height is too low. Please refer to `_page/about.md` as an example.
 
 * enable google analytics using gtag.js mode
+    * create a new google analytics account for your website by the [instruction](https://support.google.com/analytics/answer/1009694?hl=en) and the get the gtag ID 
+
     * In `_config.yml` file, enable the google analytics globally
     ```
-    
+    analytics:
+        provider: "google-gtag"
+        google:
+            tracking_id: "UA-118867307-1"
+            anonymize_ip: false # default
     ```
+    * enable the `production` ENV variable to track the website by adding
+    ```ruby
+    ENV["JEKYLL_ENV"] = "production"
+    ```
+    before the website is built by the jekyll.
+
 ## To Do
 * notice syntax
 * feature_row and alignment
