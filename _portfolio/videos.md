@@ -13,13 +13,13 @@ Dozens of videos about my motion planning and simulations work to come!
 
 
 ## Hybrid Motion Planning Library (HMPL)
-* HMPL Highlights (state of HMPL in 2017)
+### HMPL Highlights (state of HMPL in 2017)
     {% include video id="257666203" provider="vimeo" %}
 
-* Derivative-free Path Optimization Algorithm
+### Derivative-free Path Optimization Algorithm
     {% include video id="268623653" provider="vimeo" %}
 
-* Multiple-stage State Space Sampling Path Planning Algorithm
+### Multiple-stage State Space Sampling Path Planning Algorithm
     {% include video id="268625287" provider="vimeo" %}
 
 
