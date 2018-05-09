@@ -2,7 +2,7 @@
 
 My website based on the minimal mistakes theme.
 
-Since github pages do not support all the jekyll plugins due to security reasons, I have to put all my source codes of the website with needed plugins in `source` branch and set it as the primary branch in github, then use the Rakefile script to publish a prodoction website to the `master` branch. The github pages will host it automatically. If the repository is a project repo, the `gh-pages` branch will be used to deploy the website.  
+Since github pages do not support all the jekyll plugins due to security reasons, I have to put all my source codes of the website with needed plugins in `source` branch and set it as the primary branch in github, then use the Rakefile script to publish a production website to the `master` branch. The github pages will host it automatically. If the repository is a project repo, the `gh-pages` branch will be used to deploy the website.  
 The default branch is the `source` where I enable the jekyll-scholar plugin. The master branch is for publishing gh-pages. The other jekyll plugins that are not supported by github pages can be installed to the `source` branch as well.
 
 

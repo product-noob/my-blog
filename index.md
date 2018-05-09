@@ -23,7 +23,7 @@ I developed several handy simulation tools to support motion planning and contro
 {: style="text-align: justify;"}
 
 
-I am also a main contributor to several awesome autonomous driving projects from motion planning and simulation aspects: [Autonomoose](http://www.autonomoose.net/), [Skyline(Renesas Car)](https://www.renesas.com/en-us/about/press-center/news/2017/news201701042.html), [BlackBerry QNX Autonomous Prototype Vehicle](https://www.youtube.com/watch?v=xAjntsc8MR0).
+I was also a main contributor to several awesome autonomous driving projects from motion planning and simulation aspects: [Autonomoose](http://www.autonomoose.net/), [Skyline(Renesas Car)](https://www.renesas.com/en-us/about/press-center/news/2017/news201701042.html), [BlackBerry QNX Autonomous Prototype Vehicle](https://www.youtube.com/watch?v=xAjntsc8MR0).
 {: style="text-align: left;"}
 
 
