@@ -1,9 +1,9 @@
 # yuzhangbit.github.io
 
-
 My website based on the minimal mistakes theme.
 
-The default branch is the `source` where I enable the jekyll-scholar plugin. The master branch is for publishing gh-pages. The other jekyll plugins that are not supported by github pages can be installed to this branch as well.
+Since github pages do not support all the jekyll plugins due to security reasons, I have to put all my source codes of the website with needed plugins in `source` branch and set it as the primary branch in github, then use the Rakefile script to publish a prodoction website to the `master` branch. The github pages will host it automatically. If the repository is a project repo, the `gh-pages` branch will be used to deploy the website.  
+The default branch is the `source` where I enable the jekyll-scholar plugin. The master branch is for publishing gh-pages. The other jekyll plugins that are not supported by github pages can be installed to the `source` branch as well.
 
 
 
@@ -32,7 +32,7 @@ rake publish
     You have to include height and width both to have a full view of pdf. Only enabling one, let's say height, the actual height will not change. The default height is too low. Please refer to `_page/about.md` as an example.
 
 * enable google analytics using gtag.js mode
-    * create a new google analytics account for your website by the [instruction](https://support.google.com/analytics/answer/1009694?hl=en) and the get the gtag ID 
+    * create a new google analytics account for your website by the [instruction](https://support.google.com/analytics/answer/1009694?hl=en) and the get the gtag ID
 
     * In `_config.yml` file, enable the google analytics globally
     ```
@@ -46,10 +46,8 @@ rake publish
     ```ruby
     ENV["JEKYLL_ENV"] = "production"
     ```
-    before the website is built by the jekyll.
-
-## To Do
-* notice syntax
+    to the [Rakefile](https://github.com/yuzhangbit/yuzhangbit.github.io/blob/source/Rakefile) before the website is built by the jekyll.
+* notice syntax  
 * feature_row and alignment
 * gallery
 * image alignment
