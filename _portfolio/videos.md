@@ -26,3 +26,14 @@ Dozens of videos about my motion planning and simulations work to come!
 ## Simulation
 ### Fast Scene Modelling
     {% include video id="268622141" provider="vimeo" %}
+
+
+
+
+
+## Experiments
+### Forward-simulation path planning algorithm
+{% include video id="_rNmY6xvI5k"   provider = "youtube" %}
+
+### A Path Tracking Algorithm for Small Smart Cars.
+{% include video id="pyaz2AnnQJg"  provider = "youtube" %}

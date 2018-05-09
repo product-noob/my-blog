@@ -8,7 +8,7 @@ require "jekyll"
 # Change your GitHub reponame
 GITHUB_REPONAME = "yuzhangbit/yuzhangbit.github.io"
 
-ENV["JEKYLL_ENV"] = "production"
+ENV["JEKYLL_ENV"] = "production"  # enable google analytics using this variable
 
 desc "Generate blog files"
 task :generate do
