@@ -10,3 +10,30 @@ tags:
 ---
 
 The real-time performance is really important in self-driving software developments. A easy-to-use, accurate program profiler is very useful for improving the existing software. The `easy_profiler` seems decent.
+
+### Build and Install
+```
+git clone https://github.com/yse/easy_profiler.git
+cd easy_profiler
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE="Release" ..
+make -j4
+sudo make install
+```
+
+### Use it with CMake
+In CMakelist file, add
+```cmake
+project(app_for_profiling)
+
+set(SOURCES
+    main.cpp
+)
+
+find_package(easy_profiler REQUIRED)
+
+add_executable(app_for_profiling ${SOURCES})
+
+target_link_libraries(app_for_profiling easy_profiler)
+
+```

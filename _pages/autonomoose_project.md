@@ -53,3 +53,8 @@ scenes:
 ---
 
 Coming soon!
+
+[https://www.autonomoose.net/](https://www.autonomoose.net/)
+
+## Highlights
+{% include video id="KjQosq-DlMg"   provider = "youtube" %}
