@@ -23,7 +23,7 @@ I developed several handy simulation tools to support motion planning and contro
 {: style="text-align: justify;"}
 
 
-I was also a main contributor to several awesome autonomous driving projects from motion planning and simulation aspects: [Autonomoose](http://www.autonomoose.net/), [Skyline(Renesas Car)](https://www.renesas.com/en-us/about/press-center/news/2017/news201701042.html), [BlackBerry QNX Autonomous Prototype Vehicle](https://www.youtube.com/watch?v=xAjntsc8MR0).
+I was a main contributor to several awesome autonomous driving projects from motion planning and simulation aspects: [Autonomoose](http://www.autonomoose.net/), [Skyline(Renesas Car)](https://www.renesas.com/en-us/about/press-center/news/2017/news201701042.html), [BlackBerry QNX Autonomous Prototype Vehicle](https://www.youtube.com/watch?v=xAjntsc8MR0) from 2016 to 2017.
 {: style="text-align: left;"}
 
 
@@ -32,4 +32,5 @@ In 2017, I attended the CES(Consumer Electronics Show) in Las Vegas to show the 
 
 
 ## News
-Coming soon!
+Our preprint ***"Toward a More Complete, Flexible, and Safer Speed Planning for Autonomous Driving via Convex Optimization"*** paper is now available at:
+[http://www.preprints.org/manuscript/201805.0164/v1](http://www.preprints.org/manuscript/201805.0164/v1)

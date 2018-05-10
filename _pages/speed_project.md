@@ -12,7 +12,6 @@ header:
   #cta_label: "More Info"
   #cta_url: "https://unsplash.com"
 
-
 feature_row:
   - url: /assets/images/planner_s.jpg
     #btn_label: "Read More"
