@@ -30,6 +30,13 @@ I was a main contributor to several awesome autonomous driving projects from mot
 In 2017, I attended the CES(Consumer Electronics Show) in Las Vegas to show the functional safety, autonomy of our autonomous driving system running on low power consumption R-Car H3 SoC. It's a big success!
 {: style="text-align: justify;"}
 
+## Research Interests
+* Real-time Motion Planning
+* Optimization-based and Search-based Motion Planning with Differential Constraints
+* Obstacle Avoidance and Collision Checking
+* Simulation for Developments and Evaluations of Motion Planning Algorithms
+* Machine Learning Techniques that Improve the Performance and Efficiency of Classical Motion Planning Methods
+
 
 ## News
 Our preprint ***"Toward a More Complete, Flexible, and Safer Speed Planning for Autonomous Driving via Convex Optimization"*** paper is now available at:
