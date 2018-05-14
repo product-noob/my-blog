@@ -63,7 +63,7 @@ Speed planning plays an important role in guaranteeing the ride comfort and safe
     <figcaption></figcaption>
   </figure>
 
-We analyze the requirements of various driving scenarios for speed planning along the fixed path, summary, and categorize constraints need to be addressed by speed planners as follows:
+We analyze the requirements of various driving scenarios for speed planning along the fixed path, summarize, and categorize constraints need to be addressed by speed planners as follows:
 <figure style="width: 1000px" class="align-center">
   <img src="{{ site.url }}{{ site.baseurl }}/assets/images/speed_planning/constraint_type.png" alt="">
   <figcaption></figcaption>
