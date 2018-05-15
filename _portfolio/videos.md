@@ -16,11 +16,28 @@ Dozens of videos about my motion planning and simulations work to come!
 ### HMPL Highlights (state of HMPL in 2017)
     {% include video id="257666203" provider="vimeo" %}
 
+### Semi-global Path Modification Layer
+    {% include video id="269654700" provider="vimeo" %}
+    {% include video id="269671390" provider="vimeo" %}
+
+
 ### Derivative-free Path Optimization Algorithm
     {% include video id="268623653" provider="vimeo" %}
+    {% include video id="269671888" provider="vimeo" %}
+
 
 ### Multiple-stage State Space Sampling Path Planning Algorithm
     {% include video id="268625287" provider="vimeo" %}
+
+
+
+## State Space Sampling Local Planner
+{% include video id="269679048" provider="vimeo" %}
+{% include video id="269673727" provider="vimeo" %}
+{% include video id="269677095" provider="vimeo" %}
+{% include video id="269773783" provider="vimeo" %}
+{% include video id="269672111" provider="vimeo" %}
+
 
 
 ## Simulation
