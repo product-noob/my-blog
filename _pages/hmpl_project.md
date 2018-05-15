@@ -34,6 +34,7 @@ challenges:
     image_path: /assets/images/hmpl/hmpl_without_obs.png
   - url: /assets/images/hmpl/hmpl_with_obs.jpg
     image_path: /assets/images/hmpl/hmpl_with_obs.jpg
+
 scenes:
     - url: /assets/images/hmpl/scene1.png
       image_path: /assets/images/hmpl/scene1.png
@@ -92,6 +93,12 @@ A range of challenging simulation experiments show that the proposed method retu
 #### Featured Scenarios
 
 {% include gallery id="challenges" %}
+
+
+<figure style="width: 1000px" class="align-center">
+  <img src="{{ site.url }}{{ site.baseurl }}/assets/images/hmpl/performance.png " alt="">
+  <figcaption>Comparison of Performance. Smoothness: the lower, the better.</figcaption>
+</figure>
 
 #### Other Scenarios
 {% include gallery id="scenes" %}
