@@ -40,4 +40,4 @@ In 2017, I attended the CES(Consumer Electronics Show) in Las Vegas to show the 
 
 ## News
 Our preprint ***"Toward a More Complete, Flexible, and Safer Speed Planning for Autonomous Driving via Convex Optimization"*** paper is now available at:
-[http://www.preprints.org/manuscript/201805.0164/v1](http://www.preprints.org/manuscript/201805.0164/v1)
+[http://www.preprints.org/manuscript/201805.0164/v2](http://www.preprints.org/manuscript/201805.0164/v2)
