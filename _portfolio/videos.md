@@ -11,6 +11,7 @@ sidebar:
 ---
 Dozens of videos about my motion planning and simulations work to come!
 
+    {% include video id="QLtADl4IHUM" provider="youtube" %}
 
 ## Hybrid Motion Planning Library (HMPL)
 ### HMPL Highlights (state of HMPL in 2017)
