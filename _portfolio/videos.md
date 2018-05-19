@@ -31,13 +31,15 @@ Dozens of videos about my motion planning and simulations work to come!
     {% include video id="268625287" provider="vimeo" %}
 
 
-
 ## State Space Sampling Local Planner
 {% include video id="269679048" provider="vimeo" %}
 {% include video id="269673727" provider="vimeo" %}
 {% include video id="269677095" provider="vimeo" %}
 {% include video id="269773783" provider="vimeo" %}
 {% include video id="269672111" provider="vimeo" %}
+{% include video id="f5tw2KbyEAk" provider="youtube" %}
+{% include video id="269672111" provider="vimeo" %}
+
 
 
 
@@ -50,6 +52,12 @@ Dozens of videos about my motion planning and simulations work to come!
 
 
 ## Experiments
+
+    {% include video id="KjQosq-DlMg"   provider = "youtube" %}
+    {% include video id="eA39bKtbuAs"   provider = "youtube" %}
+
+
+
 ### Forward-simulation path planning algorithm
 {% include video id="_rNmY6xvI5k"   provider = "youtube" %}
 
