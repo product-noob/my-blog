@@ -16,6 +16,13 @@ using scss style file ([_buttons.scss](https://github.com/yuzhangbit/yuzhangbit.
     * The title of the paper is bold.
     * The initialization of authors' name is disabled.
 
+## Host the website locally
+```
+bash host_locally.bash
+```
+Then the website is available at [http://localhost:4000](http://localhost:4000).
+
+
 ## Publish the website
 
 All the developments go to the `source` branch. When everything is ready, use commands below to publish the website to the `master` branch and push to the remote.
