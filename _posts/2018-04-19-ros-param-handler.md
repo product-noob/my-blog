@@ -21,6 +21,24 @@ The [rosparam_handler](https://github.com/cbandera/rosparam_handler) is a nice t
 The orignal tutorials did a great job in explaining the details in seperate tutorials. Here I want to present the necessary changes you need to do from a global perspective. Before diving into the details, please refer to the instruction in [rosparam_handler](https://github.com/cbandera/rosparam_handler) to install the ros package.
 
 1. Define the parameter types and properties in a python file. Note this file is used to generate header-only class that you can call.
+    ```python
+    #!/usr/bin/env python
+    from rosparam_handler.parameter_generator_catkin import *
+    gen = ParameterGenerator()
+    gen.add("int_param", paramtype="int", description="An Integer parameter")
+    gen.add("double_param", paramtype="double",description="A double parameter")
+    gen.add("str_param", paramtype="std::string", description="A string parameter",  default="Hello World")
+    gen.add("bool_param", paramtype="bool", description="A Boolean parameter")
+    gen.add("vector_param", paramtype="std::vector<double>", description="A vector parameter")
+    gen.add("map_param", paramtype="std::map<std::string,std::string>", description="A map parameter")
+    gen.add("configurable_parameter", paramtype="double", description="This parameter can be set via dynamic_reconfigure", configurable=True)
+    gen.add("dummy", paramtype="double", description="My Dummy parameter", level=0,
+    edit_method="", default=5.2, min=0, max=10, configurable=True,
+    global_scope=False, constant=False)
+    gen.add_enum("my_enum", description="My first self written enum",
+    entry_strings=["Small", "Medium", "Large", "ExtraLarge"], default="Medium")
+    exit(gen.generate("astar_planner", "hybrid_astar_node", "astar"))
+    ```
 
 2. Add `rosparam_handler` and `dynamic_reconfigure` as dependencies in package.xml.
 
