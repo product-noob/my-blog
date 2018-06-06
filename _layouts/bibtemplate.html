@@ -25,6 +25,14 @@
     <button class="reviewbtn">under review</button>
 {% endif %}
 
+{% if entry.note == "accepted" %}
+    <button class="reviewbtn">to appear</button>
+{% endif %}
+
+{% if entry.note == "in press" %}
+    <button class="inpressbtn">in press</button>
+{% endif %}
+
 {% if entry.code %}
     <a href="{{ entry.code }}"><input class="button3" type="button" value="code" /></a>
 {% endif %}
