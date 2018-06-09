@@ -163,6 +163,7 @@ plugins:
   - jekyll-feed
   - jemoji
   - jekyll-scholar
+  - jekyll-seo-tag
 
 # mimic GitHub Pages with --safe
 whitelist:
@@ -282,3 +283,7 @@ scholar:
    #details_link:   Details
 
    query: "@*"
+
+
+
+## SEO tag setup
