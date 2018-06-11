@@ -39,5 +39,9 @@ In 2017, I attended the CES(Consumer Electronics Show) in Las Vegas to show the 
 
 
 ## News
+### June 2018
+Our paper ***"Hybrid Trajectory Planning for Autonomous Driving in Highly Constrained Environments"*** is accepted by the ***IEEE Access*** journal and the preprint version is avaliable at [https://ieeexplore.ieee.org/document/8375948/](https://ieeexplore.ieee.org/document/8375948/)
+
+### May 2018
 Our preprint ***"Toward a More Complete, Flexible, and Safer Speed Planning for Autonomous Driving via Convex Optimization"*** paper is now available at:
 [http://www.preprints.org/manuscript/201805.0164/v2](http://www.preprints.org/manuscript/201805.0164/v2)
