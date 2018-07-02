@@ -5,7 +5,6 @@ classes: wide
 categories:
   - Tools
 tags:
-  - ROS
   - Automation
 ---
 
