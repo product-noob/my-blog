@@ -38,7 +38,12 @@ In 2017, I attended the CES(Consumer Electronics Show) in Las Vegas to show the 
 * Machine Learning Techniques that Improve the Performance and Efficiency of Classical Motion Planning Methods
 
 
-## News
+## News  
+### July 2018  
+Our paper ***"Speed Planning for Autonomous Driving via Convex Optimization"*** is accepted
+for presentation at the 21st IEEE International Conference on Intelligent Transportation Systems (IEEE ITSC 2018) which will be held in Maui,
+Hawaii, USA in November 2018.
+
 ### June 2018
 Our paper ***"Hybrid Trajectory Planning for Autonomous Driving in Highly Constrained Environments"*** is accepted by the ***IEEE Access*** journal and the preprint version is avaliable at [https://ieeexplore.ieee.org/document/8375948/](https://ieeexplore.ieee.org/document/8375948/)
 
