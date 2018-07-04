@@ -40,6 +40,8 @@ In 2017, I attended the CES(Consumer Electronics Show) in Las Vegas to show the 
 
 ## News  
 ### July 2018  
+Our paper ***"Toward a More Complete, Flexible, and Safer Speed Planning for Autonomous Driving via Convex Optimization"*** is accepted by the ***Sensors(Switzerland)***  journal.
+
 Our paper ***"Speed Planning for Autonomous Driving via Convex Optimization"*** is accepted
 for presentation at the 21st IEEE International Conference on Intelligent Transportation Systems (IEEE ITSC 2018) which will be held in Maui,
 Hawaii, USA in November 2018.
