@@ -47,7 +47,7 @@ for presentation at the 21st IEEE International Conference on Intelligent Transp
 Hawaii, USA in November 2018.
 
 ### June 2018
-Our paper ***"Hybrid Trajectory Planning for Autonomous Driving in Highly Constrained Environments"*** is accepted by the ***IEEE Access*** journal and the preprint version is avaliable at [https://ieeexplore.ieee.org/document/8375948/](https://ieeexplore.ieee.org/document/8375948/)
+Our paper ***"Hybrid Trajectory Planning for Autonomous Driving in Highly Constrained Environments"*** is accepted by the ***IEEE Access*** journal and the online version is available at [https://ieeexplore.ieee.org/document/8375948/](https://ieeexplore.ieee.org/document/8375948/)
 
 ### May 2018
 Our preprint ***"Toward a More Complete, Flexible, and Safer Speed Planning for Autonomous Driving via Convex Optimization"*** paper is now available at:
