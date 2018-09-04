@@ -18,16 +18,19 @@ Thus the parameter_server sounds like a static configuration tool and dynamic_re
 The [rosparam_handler](https://github.com/cbandera/rosparam_handler) is a nice tool that unifies these two functionalities and makes these two types of parameters live in the same namespace to avoid redundancy.
 
 
-The orignal tutorials did a great job in explaining the details in seperate tutorials. Here I want to present the necessary changes you need to do from a global perspective. Before diving into the details, please refer to the instruction in [rosparam_handler](https://github.com/cbandera/rosparam_handler) to install the ros package.
+The orignal tutorials did a great job in explaining the details in seperate tutorials. Here I want to present the necessary changes you need to do from a global perspective. Before diving into the details, please put the `rosparam_handler` package in your `catkin_ws/src` folder.
+```
+git clone https://github.com/cbandera/rosparam_handler
+```
+***Steps:***   
+1. Define the parameter types and properties in the `cfg/Some.params` file. Note this file is used to generate header-only class that you can call. If you don't have the `cfg` folder, just create one using `mkdir -p cfg` in your package root folder.   
 
-1. Define the parameter types and properties in a python file. Note this file is used to generate header-only class that you can call.
     ```python
     #!/usr/bin/env python
     from rosparam_handler.parameter_generator_catkin import *
     gen = ParameterGenerator()
     gen.add("int_param", paramtype="int", description="An Integer parameter")
     gen.add("double_param", paramtype="double",description="A double parameter")
-    gen.add("str_param", paramtype="std::string", description="A string parameter",  default="Hello World")
     gen.add("bool_param", paramtype="bool", description="A Boolean parameter")
     gen.add("vector_param", paramtype="std::vector<double>", description="A vector parameter")
     gen.add("map_param", paramtype="std::map<std::string,std::string>", description="A map parameter")
@@ -37,7 +40,7 @@ The orignal tutorials did a great job in explaining the details in seperate tuto
     global_scope=False, constant=False)
     gen.add_enum("my_enum", description="My first self written enum",
     entry_strings=["Small", "Medium", "Large", "ExtraLarge"], default="Medium")
-    exit(gen.generate("astar_planner", "hybrid_astar_node", "astar"))
+    exit(gen.generate("package_name", "package_node", "name_of_this_file"))
     ```
 
 2. Add `rosparam_handler` and `dynamic_reconfigure` as dependencies in package.xml.
@@ -49,19 +52,38 @@ The orignal tutorials did a great job in explaining the details in seperate tuto
 
 3. Configure the CMakelists.txt for it.
   ```bash
-  #step one
+  #########################
+  ## step one
+  #########################
   find_package(catkin REQUIRED COMPONENTS rosparam_handler dynamic_reconfigure)
-  #step two, note that this command has to go before the catkin_package command.
+  # include, let the generated files find the needed headers in catkin packages
+  include_directories(
+      include
+      ${catkin_INCLUDE_DIRS}
+  )
+  #########################
+  ## step two
+  #########################
+  # note that this command has to go before the catkin_package command.
   generate_ros_paramter_files(
       cfg/Some.params    ## for generating parameters header files
       #cfg/someCfgFile.cfg   ## for generating dynamic configuration files
     )
+  #########################
+  ## step three
+  #########################
+  catkin_package(
+      CATKIN_DEPENDS rosparam_handler dynamic_reconfigure
+  )
   # note: below commands are related to your own app.
   add_executable(example_excutable
       src/some.cpp)
   target_link_libraries(example_excutable
       ${some_libs})
-  #step three, add dependencies, note that this command should go after an example build command like above
+  #########################
+  ## step four
+  #########################
+  # add dependencies, note that this command should go after an example build command like above
   add_dependencies(example_executable ${PROJECT_NAME}_genparam) ## To generate SomeParamters.h file
   add_dependencies(example_executable ${PROJECT_NAME}_gencfg) ## To generate SomeConfig.h file
   ```
@@ -123,7 +145,8 @@ The orignal tutorials did a great job in explaining the details in seperate tuto
 
     class MyNodeClass {
     private:
-      // dynamic reconfigure
+      // dynamic reconfigure,
+      // the Package_name::SomeConfig is generated automatically
       dynamic_reconfigure::Server<package_name::SomeConfig> reconfigSrv_; // Dynamic reconfiguration service
       // define the callback
       void reconfigureRequest(package_name::SomeConfig&, uint32_t);
@@ -135,6 +158,10 @@ The orignal tutorials did a great job in explaining the details in seperate tuto
       32_t level) {
         this->param_.fromConfig(config)
     }
+    ```
+    Set the callback function to let `dynamic_reconfigure` to modify the parameters.
+    ```
+    reconfigSrv_.setCallback(boost::bind(&MyNodeClass::reconfigureRequest, this, _1, _2));
     ```
 
       Here is what a rqt gui for dynamic_reconfigure looks like.
