@@ -39,7 +39,7 @@ while(ros::ok()) {
 ```
 Thus, `spinOnce()` gives you more control on when to process callbacks. You need to be aware of and control the time between two `spinOnce()` by yourself and don't let the callbacks be activated too late.  This is how publisher in tutorial use `spinOnce()` with `ros::rate.sleep` for repetitive work. In the simple subscriber, you don't need to process information periodically, only callbacks need to be handled. For this case, `ros::spin()` is enough.
 
-But this doesn't mean you can't do periodic work by using `ros::spin()`. By combining `ros::spin()` with timers, you can also achieve the same result as following codes:
+But this doesn't mean you can't do periodic work by using `ros::spin()`. By combining `ros::spin()` with timers, you can also achieve the same goal as following codes:
 ```c++
 ros::Rate loop_rate(10);
 while(ros::ok()) {
@@ -81,7 +81,7 @@ This is caused by the single thread mode we use in the simple ros node with `ros
 
 I provide such examples using both `spinOnce()` and `spin()` with above class node pattern in the [demo](https://github.com/yuzhangbit/ros_node_pattern/tree/master/demo) package of [ros_node_pattern](https://github.com/yuzhangbit/ros_node_pattern) repo.
 
-* [simple_node]((https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/src/simple_node.cpp): `spinOnce()` with a while loop implementation, **simple node pattern**
+* [simple_node](https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/src/simple_node.cpp): `spinOnce()` with a while loop implementation, **simple node pattern**
 * [single_thread_node_instance](https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/src/single_thread_node_instance.cpp): `spin()` with a timer in the node class implementaion, **class node pattern**
 
 Both periodic loops are set to 10hz. Three subscribers are defined to subscribing to the same topic. Each subscriber callback will block the program for 200ms. Then the publishing rate becomes 1.666hz(1/(0.2 + 0.2 + 0.2)hz) instead of 10hz.
@@ -152,7 +152,7 @@ We can easily implement the multi-thread ros node using the same node class even
   }
   ```
 
-Both versions are multi-thread ros nodes. Now every callbacks get a thread to use. Here are differences of `MultiThreadedSpinner` and `AsyncSpinner` explained by [roscpp/Overview/Callbacks and Spinning](http://wiki.ros.org/roscpp/Overview/Callbacks%20and%20Spinning).
+Both versions are multi-thread ros nodes. Now every callback gets a thread to use. Here are differences of `MultiThreadedSpinner` and `AsyncSpinner` explained by [roscpp/Overview/Callbacks and Spinning](http://wiki.ros.org/roscpp/Overview/Callbacks%20and%20Spinning).
 > **MultiThreadedSpinner** is a blocking spinner, similar to ros::spin(). You can specify a number of threads in its constructor, but if unspecified (or set to 0), it will use a thread for each CPU core.
 
 > A more useful threaded spinner is the **AsyncSpinner**. Instead of a blocking spin() call, it has start() and stop() calls, and will automatically stop when it is destroyed.
@@ -161,7 +161,7 @@ Both versions are multi-thread ros nodes. Now every callbacks get a thread to us
 
 To prove that the multi-thread versions are working, you can repeat steps above by replacing step 4 with `rosrun demo multi_thread_node_instance` or `rosrun demo async_multi_thread_node_instance`.
 
-You will get 10hz in step 5 and step 7. You can also the check the thread ID of every callback function or main loop.
+You will get 10hz in step 5 and step 7. You can also check the thread ID of every callback function or the main loop.
 
 ## Nodelet Node Pattern
 To be done.
