@@ -52,13 +52,13 @@ git checkout -b feature_catkinizing_module # create a new branch locally
 git push --set-upstream origin feature_catkinizing_module # push to the remote
 ```
 #### 2. Get the source codes of a module:   
-* Checkout the module   
+* Checkout a module   
 This repo holds a copy of the source codes of [apollo-v3.0.0](https://github.com/ApolloAuto/apollo/releases) in branch `apollo_3_0_0`. You can use the git command to checkout a folder from the branch `apollo_3_0_0`.
   ```bash
   cd src && git checkout apollo_3_0_0 -- module_name # copy the module_name folder from apollo_3_0_0 to current working branch
   ```
-* Modify the include directries in the header and source files   
-All the original files include the `module/module_name` in the `#include` lines. But in cmake projects, the prefix `module/module` is not needed. My solution is searching all the `.h` and `.cc` files for `module/module_name/` and replacing it with an empty string `""`. In `port_apollo` repo, I provide a python script [scripts/tools/content_hunter.py](https://github.com/yuzhangbit/port_apollo/blob/master/scripts/tools/content_hunter.py) to do the work automatically.  The usage is as below:
+* Modify the `#include` directories in the header and source files in `module_name` directory  
+All the original files include the `modules/module_name` in the `#include` lines. But in cmake projects, the prefix `modules/module_name` is not needed. My solution is searching all the `.h` and `.cc` files for `modules/module_name/` and replacing it with an empty string `""`. In `port_apollo` repo, I provide a python script [scripts/tools/content_hunter.py](https://github.com/yuzhangbit/port_apollo/blob/master/scripts/tools/content_hunter.py) to do the work automatically.  The usage is as below:
   ```python
   python scripts/tools/content_hunter.py [module1_name] [module2_name]
   ```
@@ -67,7 +67,7 @@ All the original files include the `module/module_name` in the `#include` lines.
   # for example 
   python scripts/tools/content_hunter.py common
   ```
-  **Note**: The script only substitutes the string `module/module_name/`. If the file include `module/other_module_name`, you may need to remove it manually. Or improve the python script.
+  **Note**: The script only substitutes the string `modules/module_name/`. If the file include `modules/other_module_name`, you may need to remove it manually. Or improve the python script.
 
 #### 3. Add ROS-related files to the `module_name` package  
 
