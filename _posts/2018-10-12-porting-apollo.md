@@ -107,13 +107,13 @@ All the original files include the `module/module_name` in the `#include` lines.
     PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${PROTOS})
     ```
     Note: I write a custom cmake module called `FindProtobuf.cmake` to find the protobuf library and related variables. It depends on `pkg_check_modules` of the pkgconfig and protobuf.pc to find the right version and return below variables
-    ```
+    ```cmake
     PROTOBUF_INCLUDE_DIRS
     PROTOBUF_LIBRARIES
     RPOTOBUF_FOUND
     ```
     It also provides a cutom cmake command `PROTOBUF_GENERATE_CPP` to generate the header and source files for the `.proto` definition files before compiling the library. Currently, the script does not install `.proto` files to the shared folder like `catkin_ws/devel/share` or `catkin_ws/install/share`. The generated files will mirror the `.proto` directory structure in `module_name` folder. So if you need to use the generated header file of some `.proto`, just include the `directory_to_proto` file but replace the extension `.proto` with the `.pb.h`. For example, `#include "common/configs/proto/vehicle_config.pb.h"` for `common/configs/proto/vehicle_config.proto`. Of course, in the same package, you don't need the module name `common`.
-    ```
+    ```cmake
     # global include directories
     include_directories(
         ${catkin_INCLUDE_DIRS}
@@ -182,26 +182,26 @@ All the original files include the `module/module_name` in the `#include` lines.
               PATTERN ".svn" EXCLUDE
       )
     # install the header files in the module_name root folder
-     install(FILES log.h macro.h
+    install(FILES log.h macro.h
               DESTINATION ${CATKIN_DEVEL_PREFIX}/include/${PROJECT_NAME}
-     )
-     # install all the headers to the install space, mirror the structure
-     # install the generated headers
-     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
+    )
+    # install all the headers to the install space, mirror the structure
+    # install the generated headers
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
               DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
               FILES_MATCHING PATTERN "*.h"
               PATTERN ".svn" EXCLUDE
-     )
-     # install all the headers to install space
-     install(DIRECTORY ${DIRS}
+    )
+    # install all the headers to install space
+    install(DIRECTORY ${DIRS}
               DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
               FILES_MATCHING PATTERN "*.h"
               PATTERN ".svn" EXCLUDE
-     )
-     # install header in the module_name root folder to install space
-     install(FILES log.h macro.h
+    )
+    # install header in the module_name root folder to install space
+    install(FILES log.h macro.h
               DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-     )
+    )
     ```   
 
 * Add `package.xml`, should match the ros packages defined by `PKG_DEPS` in `CMakeLists.txt`.
@@ -231,7 +231,7 @@ All the original files include the `module/module_name` in the `#include` lines.
 #### 5. Call the algorithms from the `module_name` you just converted in your catkin package `my_package`
   * CMakeLists.txt
 
-      ```
+      ```cmake
       find_package(catkin REQUIRED COMPONENTS module_name)
       catkin_package(
           CATKIN_DEPENDS module_name
