@@ -1,6 +1,6 @@
 ---
 published: true
-title: Using Apollo Algorithms within Your Normal ROS Module  
+title: Using Apollo Algorithms in Your Normal ROS Package  
 classes: wide
 categories:
   - Tools
@@ -11,7 +11,7 @@ tags:
 ---
 
 
-This blog will introduce how to convert an apollo module to a normal ROS package and use Apollo algorithms in your own ros package on a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.
+This blog will introduce how to convert an apollo module to a normal ROS package and use Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.
 
 The tested codes are based on the release [apollo-v3.0.0](https://github.com/ApolloAuto/apollo/releases).
 
