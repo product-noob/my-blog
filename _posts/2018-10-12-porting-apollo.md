@@ -220,13 +220,13 @@ All the original files include the `module/module_name` in the `#include` lines.
     ```
 
 #### 4. Compile and Test, in `port_apollo`
-* Build   
+* Build and run tests
 
-        ```bash
-        catkin build
-        catkin build --make-args tests
-        ./devel/lib/module_name/module_name
-        ```
+    ```bash
+    catkin build
+    catkin build --make-args tests
+    ./devel/lib/module_name/module_name
+    ```
 
 #### 5. Call the algorithms from the `module_name` you just converted in your catkin package `my_package`
   * CMakeLists.txt
