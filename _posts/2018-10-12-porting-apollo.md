@@ -11,12 +11,12 @@ tags:
 ---
 
 
-This blog will introduce how to convert an apollo module to a normal ROS package and use Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.
+This blog will introduce how the [port_apollo](https://github.com/yuzhangbit/port_apollo) repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.
 
 The tested codes are based on the release [apollo-v3.0.0](https://github.com/ApolloAuto/apollo/releases).
 
-The goal of this project is to convert bazel project to a cmake project while without modifying the algorithm part of source codes in apollo and keeping the directory structure unchanged. But the include directories in the sources somehow need to be adapted according to the structure of cmake projects. I am not going the split the header files and source files of apollo like a typical cmake
-projects. I prefer keeping as it was to avoid copying files and moving directories. The rational behind this is that in this way I can easily checkout the contents of the module folder of apollo and throw the existing `CMakeLists.txt` and `package.xml` to the updated codes and get a new working version with minimum effort.
+The goal of this project is to convert a bazel project to a cmake project while without modifying the algorithm part of source codes in apollo and keeping the existing directory structure unchanged. But the `#include` directories in the source files somehow need to be adapted according to the structure of cmake projects. I am not going the split the header files and source files of apollo like typical cmake
+projects. I prefer keeping codes as it was to avoid copying files and moving directories. The rational behind this is that in this way I can easily checkout the contents of the module folder of new apollo release version and throw the existing `CMakeLists.txt` and `package.xml` to the updated codes and get a new working version with minimum effort.
 So the `include` directory won't exist in every ROS package folder. But you can still include project header files like other normal ROS packages assuming the headers are there.
 
 ## Structure of the Repo
@@ -55,10 +55,10 @@ git push --set-upstream origin feature_catkinizing_module # push to the remote
 * Checkout the module   
 This repo holds a copy of the source codes of [apollo-v3.0.0](https://github.com/ApolloAuto/apollo/releases) in branch `apollo_3_0_0`. You can use the git command to checkout a folder from the branch `apollo_3_0_0`.
   ```bash
-  cd src && git checkout apollo_3_0_0 -- module_name
+  cd src && git checkout apollo_3_0_0 -- module_name # copy the module_name folder from apollo_3_0_0 to current working branch
   ```
 * Modify the include directries in the header and source files   
-All the original files include the `module/module_name` in the `#include` lines. But in cmake projects, the prefix `module/module` is not needed. My solution is searching all the `.h` and `.cc` files for `module/module_name/` and replace it with an empty string `""`. In `port_apollo` repo, I provide a python script [scripts/tools/content_hunter.py](https://github.com/yuzhangbit/port_apollo/blob/master/scripts/tools/content_hunter.py) to do the work automatically.  The usage is as below:
+All the original files include the `module/module_name` in the `#include` lines. But in cmake projects, the prefix `module/module` is not needed. My solution is searching all the `.h` and `.cc` files for `module/module_name/` and replacing it with an empty string `""`. In `port_apollo` repo, I provide a python script [scripts/tools/content_hunter.py](https://github.com/yuzhangbit/port_apollo/blob/master/scripts/tools/content_hunter.py) to do the work automatically.  The usage is as below:
   ```python
   python scripts/tools/content_hunter.py [module1_name] [module2_name]
   ```
@@ -260,4 +260,4 @@ All the original files include the `module/module_name` in the `#include` lines.
 
 A working example could be found in package [common](https://github.com/yuzhangbit/port_apollo/tree/master/src/common).  
 
-Pull requests for [port_apollo](https://github.com/yuzhangbit/port_apollo) are welcomed!
+Pull requests for [port_apollo](https://github.com/yuzhangbit/port_apollo) are welcome!
