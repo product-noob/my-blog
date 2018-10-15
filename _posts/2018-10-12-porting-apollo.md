@@ -19,7 +19,7 @@ The goal of this project is to convert a bazel project to a cmake project while 
 projects. I prefer keeping codes as it was to avoid copying files and moving directories. The rational behind this is that in this way I can easily checkout the contents of the module folder of new apollo release version and throw the existing `CMakeLists.txt` and `package.xml` to the updated codes and get a new working version with minimum effort.
 So the `include` directory won't exist in every ROS package folder. But you can still include project header files like other normal ROS packages assuming the headers are there.
 
-## Structure of the Repo
+## Structure of the [port_apollo](https://github.com/yuzhangbit/port_apollo) Repo
 ```bash
 port_apollo
 ├── LICENSE
@@ -34,10 +34,10 @@ port_apollo
 │   ├── installer  # dependencies install scripts go here
 │   └── tools  # tools scripts
 └── src
-    ├── catkin_simple  # dependencies ros package
-    ├── glog_catkin  # dependencies ros package
-    ├── cmake  # cmake modules for FindProtobuf.cmake
-    ├── common  # apollo module
+    ├── catkin_simple  # dependencies, ros package
+    ├── glog_catkin  # dependencies, ros package
+    ├── cmake  # cmake module folder to hold FindProtobuf.cmake
+    ├── common  # apollo module, ros package 
     ├── planning # apollo module, to be done
     ...
     └── other_module_name # apollo module, to be done
