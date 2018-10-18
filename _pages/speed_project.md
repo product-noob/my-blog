@@ -54,6 +54,10 @@ Coming soon!
 ## Speed Planning for Autonomous Driving in Static and Dynamic Environments
 
 ### Background
+<figure style="width: 600px" class="align-center">
+  <img src="{{ site.url }}{{ site.baseurl }}/assets/images/speed_planning/problem_demo.png" alt="">
+  <figcaption>Speed Planning along a Fixed Path.</figcaption>
+</figure>
 Speed planning plays an important role in guaranteeing the ride comfort and safety in autonomous driving applications. All different kind of scenarios together raises distinct requirements and consequently different constraint types for speed planning problem formulations, which makes it challenging to solve.
 
 {% include gallery id="scenes" %}
