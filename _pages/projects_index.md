@@ -61,9 +61,20 @@ feature_row:
   - image_path: /assets/images/summary.jpg
     title: "Previous Projects Portfolio"
     excerpt: "Past projects related to autonomous systems that I get involved in. Please find the brief introductions [on my old website](https://sites.google.com/site/yuzhangmiracle/conferences)."
+
+feature_simulation:
+    - image_path: /assets/images/simulation/vrep_simulator.png
+      alt: "placeholder image 2"
+      title: "Lightweight and Flexible Simulation Toolset for Autonomous Driving."
+      excerpt: 'A summary of my simulation work for supporting the development of motion planning algorithms.'
+      url: "/simulation_project"
+      btn_label: "Read More"
+      btn_class: "btn--primary"
 ---
 
 ## Selected Projects
+
+{% include feature_row id="feature_simulation" type="right" %}
 
 {% include feature_row id="feature_hmpl" type="left" %}
 

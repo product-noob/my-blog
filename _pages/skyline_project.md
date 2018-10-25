@@ -52,7 +52,6 @@ scenes:
 
 ---
 
-Coming soon!
 
 ## Highlights
 {% include video id="eA39bKtbuAs"   provider = "youtube" %}

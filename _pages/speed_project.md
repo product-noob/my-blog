@@ -49,7 +49,6 @@ scenes:
   # {% include gallery id="gallery1" caption="Motion Planning Problems." %}
 
 ---
-Coming soon!
 
 ## Speed Planning for Autonomous Driving in Static and Dynamic Environments
 
@@ -143,3 +142,6 @@ By taking some additional steps beyond the seminal work done by {% cite verscheu
 ### References
 
 {% bibliography --file speed --cited_in_order %}
+
+### Resources
+* ITSC 2018 [slides](/assets/pdfs/itsc2018_convex_speed_planning_slides.pdf) 

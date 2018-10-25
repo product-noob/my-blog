@@ -52,7 +52,6 @@ scenes:
 
 ---
 
-Coming soon!
 
 [https://www.autonomoose.net/](https://www.autonomoose.net/)
 
