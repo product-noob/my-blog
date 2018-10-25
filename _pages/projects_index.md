@@ -65,7 +65,7 @@ feature_row:
 feature_simulation:
     - image_path: /assets/images/simulation/vrep_simulator.png
       alt: "placeholder image 2"
-      title: "Lightweight and Flexible Simulation Toolset for Autonomous Driving."
+      title: "Lightweight and Flexible Simulation Toolset for Autonomous Driving"
       excerpt: 'A summary of my simulation work for supporting the development of motion planning algorithms.'
       url: "/simulation_project"
       btn_label: "Read More"
