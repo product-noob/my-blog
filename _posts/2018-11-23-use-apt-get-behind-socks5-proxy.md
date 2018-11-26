@@ -39,4 +39,9 @@ sudo proxychains apt-get install g++-7 -y
 ```  
 Done in minutes!
 
+You can also use the proxychains for other software as below:
+```bash
+sudo proxychains synaptic
+proxychains julia
+```
 Enjoy!
