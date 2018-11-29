@@ -42,6 +42,12 @@ git clone https://github.com/cbandera/rosparam_handler
     entry_strings=["Small", "Medium", "Large", "ExtraLarge"], default="Medium")
     exit(gen.generate("package_name", "package_node", "name_of_this_file"))
     ```
+    In order to make this params file usable it must be executable, so lets use the following command to make it excecutable
+    ```
+    chmod +x Some.params
+    ```
+
+
 
 2. Add `rosparam_handler` and `dynamic_reconfigure` as dependencies in package.xml.
 
