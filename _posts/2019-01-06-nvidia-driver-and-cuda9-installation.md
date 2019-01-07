@@ -15,7 +15,7 @@ Tested hardware and OS configuration:
 * Graphic Card Driver Version: 410.xx
 * Disable `secure  boot` in BIOS setting
 
-The recommended way to install the Nvidia driver and Cuda is using `.run` files since the `run` files provide flexibility for configuration. You can get rid of the login loop mess-up caused by `opengl` libs coming with Nvidia drivers with care.
+The recommended way to install the Nvidia driver and Cuda is using `.run` files since the `run` files provide flexibility for configuration. You can get rid of the login loop mess-up caused by the bundled `opengl` libs in Nvidia drivers with care.
 
 Let's start with the `dkms(Dynamic Kernel Module Support)` package. This is a super useful package when you install drivers. Sometimes your laptop may have the latest hardware that the ubuntu does not support. You have to install the corresponding drivers by building from source codes. The issue is that if the system updates the kernel automatically, you basically lose your manually-installed drivers for the hardware. You have to re-install it. But with `dkms` package, you don't need to worry about this problem anymore. The rebuild of the modules is handled automatically when a kernel is upgraded.
 
