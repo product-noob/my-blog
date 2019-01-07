@@ -67,11 +67,11 @@ sudo ./cuda_9.0.176_384.81_linux.run --no-opengl-libs
 ```
 During the installation,
   * **accept** the EULA conditions
-  * say **NO** to installing the nvidia divers
+  * say **NO** to installing the nvidia drivers
   * say **YES** to installing cuda toolkit
   * say **YES** to installing cuda samples
   * say **YES** to creating a symbolic link for cuda
-  * say **NO** to rebuilding any Xserver confiuration with nvidia
+  * say **NO** to rebuilding any Xserver configuration with nvidia
 
 5. Set the env variables for cuda in `~/.bashrc`
 ```bash
