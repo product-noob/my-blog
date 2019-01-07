@@ -13,6 +13,7 @@ Tested hardware and OS configuration:
 * NVIDIA Graphic Card: Quadro M1000M
 * Cuda Version: 9.0
 * Graphic Card Driver Version: 410.xx
+* Disable `secure  boot` in BIOS setting
 
 The recommended way to install the Nvidia driver and Cuda is using `.run` files since the `run` files provide flexibility for configuration. You can get rid of the login loop mess-up caused by `opengl` libs coming with Nvidia drivers with care.
 
