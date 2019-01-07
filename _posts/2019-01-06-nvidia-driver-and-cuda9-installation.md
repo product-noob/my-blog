@@ -1,17 +1,11 @@
 ---
-
-published: true title: Nvidia Driver and Cuda9.0 Installation
-
+published: true
+title: Nvidia Driver and Cuda9.0 Installation
 classes: wide
-
 categories:
-
--	Tools
-
+  - Tools
 tags:
-
--	gpu
-
+  - gpu
 ---
 
 Tested hardware and OS configuration:
@@ -93,28 +87,26 @@ sudo service lightdm start
 ```
 and `Alt+Ctrl+F7`  
 You should get similar outputs as below by `nvidia-smi` command:  
-
   ```bash
-Mon Jan  7 21:00:08 2019       
-+-----------------------------------------------------------------------------+
-| NVIDIA-SMI 410.93       Driver Version: 410.93       CUDA Version: 10.0     |
-|-------------------------------+----------------------+----------------------+
-| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
-|===============================+======================+======================|
-|   0  Quadro M1000M       Off  | 00000000:01:00.0 Off |                  N/A |
-| N/A   51C    P0    N/A /  N/A |      0MiB /  2004MiB |      0%      Default |
-+-------------------------------+----------------------+----------------------+
-+-----------------------------------------------------------------------------+
-| Processes:                                                       GPU Memory |
-|  GPU       PID   Type   Process name                             Usage      |
-|=============================================================================|
-|  No running processes found                                                 |
-+-----------------------------------------------------------------------------+
+  Mon Jan  7 21:00:08 2019       
+  +-----------------------------------------------------------------------------+
+  | NVIDIA-SMI 410.93       Driver Version: 410.93       CUDA Version: 10.0     |
+  |-------------------------------+----------------------+----------------------+
+  | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+  | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+  |===============================+======================+======================|
+  |   0  Quadro M1000M       Off  | 00000000:01:00.0 Off |                  N/A |
+  | N/A   51C    P0    N/A /  N/A |      0MiB /  2004MiB |      0%      Default |
+  +-------------------------------+----------------------+----------------------+
+  +-----------------------------------------------------------------------------+
+  | Processes:                                                       GPU Memory |
+  |  GPU       PID   Type   Process name                             Usage      |
+  |=============================================================================|
+  |  No running processes found                                                 |
+  +-----------------------------------------------------------------------------+
 ```
 
-## Test
-1. Comprehensive testing with cuda samples
+## Cuda Testing with Samples
   * install compiler
   ```bash
   sudo apt-get install -y gcc build-essential
