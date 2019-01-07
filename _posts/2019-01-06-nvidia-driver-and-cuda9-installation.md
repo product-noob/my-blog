@@ -44,8 +44,8 @@ chmod +x cuda_9.0.176.4_linux.run
 # create blacklist file for nouveau
 sudo touch /etc/modprobe.d/blacklist-nouveau.conf
 # write the content
-sudo bash -c "echo blacklist nouveau
-options nouveau modeset=0 > /etc/modprobe.d/blacklist-nouveau.conf"
+sudo bash -c "echo 'blacklist nouveau
+options nouveau modeset=0' > /etc/modprobe.d/blacklist-nouveau.conf"
 # update the blacklist
 sudo update-initramfs -u
 ```
@@ -75,8 +75,8 @@ During the installation,
 
 5. Set the env variables for cuda in `~/.bashrc`
 ```bash
-sudo bash -c "echo export PATH=/usr/local/cuda/bin:$PATH >> ~/.bashrc"
-sudo bash -c "echo /usr/local/cuda/lib64/ > /etc/ld.so.conf.d/cuda.conf"
+sudo bash -c "echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc"
+sudo bash -c "echo '/usr/local/cuda/lib64/' > /etc/ld.so.conf.d/cuda.conf"
 source ~/.bashrc
 sudo ldconfig
 ```
