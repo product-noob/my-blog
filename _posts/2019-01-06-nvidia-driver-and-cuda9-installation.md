@@ -86,7 +86,7 @@ Reboot or get back to the window mode by:
 ```bash
 sudo service lightdm start
 ```
-and `Alt+Ctrl+F7`  
+
 You should get similar outputs as below by `nvidia-smi` command:  
   ```bash
   Mon Jan  7 21:00:08 2019       
