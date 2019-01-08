@@ -19,7 +19,7 @@ The recommended way to install the Nvidia driver and Cuda is using `.run` files 
 
 Let's start with the `dkms(Dynamic Kernel Module Support)` package. This is a super useful package when you install drivers. Sometimes your laptop may have the latest hardware that the ubuntu does not support. You have to install the corresponding drivers by building from source codes. The issue is that if the system updates the kernel automatically, you basically lose your manually-installed drivers for the hardware. You have to re-install it. But with `dkms` package, you don't need to worry about this problem anymore. The rebuild of the modules is handled automatically when a kernel is upgraded.
 
-## Preparation
+## Preliminary
 1.	Install `dkms` via `apt-get`
 ```bash
 sudo apt-get install dkms
