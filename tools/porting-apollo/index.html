@@ -1,0 +1,988 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.11.2 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Using Apollo Algorithms in Your Normal ROS Package - Yu Zhang’s Homepage</title>
+<meta name="description" content="This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Yu Zhang's Homepage">
+<meta property="og:title" content="Using Apollo Algorithms in Your Normal ROS Package">
+<meta property="og:url" content="https://yuzhangbit.github.io/tools/porting-apollo/">
+
+
+  <meta property="og:description" content="This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-10-12T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://yuzhangbit.github.io/tools/porting-apollo/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Yu Zhang",
+      "url": "https://yuzhangbit.github.io",
+      "sameAs": "https://yuzhangbit.github.io"
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Yu Zhang's Homepage Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KQ4PZJF');</script>
+<!-- End Google Tag Manager -->
+
+    <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Using Apollo Algorithms in Your Normal ROS Package | Yu Zhang’s Homepage</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Using Apollo Algorithms in Your Normal ROS Package" />
+<meta name="author" content="Yu Zhang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments." />
+<meta property="og:description" content="This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments." />
+<link rel="canonical" href="https://yuzhangbit.github.io/tools/porting-apollo/" />
+<meta property="og:url" content="https://yuzhangbit.github.io/tools/porting-apollo/" />
+<meta property="og:site_name" content="Yu Zhang’s Homepage" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-10-12T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Yu Zhang" />
+<script type="application/ld+json">
+{"description":"This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.","author":{"@type":"Person","name":"Yu Zhang"},"@type":"BlogPosting","url":"https://yuzhangbit.github.io/tools/porting-apollo/","headline":"Using Apollo Algorithms in Your Normal ROS Package","dateModified":"2018-10-12T00:00:00+08:00","datePublished":"2018-10-12T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://yuzhangbit.github.io/tools/porting-apollo/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KQ4PZJF"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">Yu Zhang's Homepage</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/" >Home</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/videos/" >Videos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/projects_index/" >Projects</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/blogs/" >Blogs</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://github.com/yuzhangbit" >Codes</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/publications/" >Publications</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/about/" >CV</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://yuzhangbit.github.io/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="/categories/#tools" itemprop="item"><span itemprop="name">Tools</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Using Apollo Algorithms in Your Normal ROS Package</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/my_bio_s.jpg" alt="Yu Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yu Zhang</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        PhD student @ IVRC at Beijing Institute of Technology, visiting student @ WAVELab at University of Waterloo.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Beijing, China</span>
+        </li>
+      
+
+      
+        <li>
+          <a href="http://yuzhangbit.github.io" itemprop="url">
+            <i class="fas fa-fw fa-link" aria-hidden="true"></i> Website
+          </a>
+        </li>
+      
+
+      
+        <li>
+          <a href="mailto:yu.zhang.bit@gmail.com">
+            <meta itemprop="email" content="yu.zhang.bit@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/yuzhangbit" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        
+          <li>
+            <a href="https://www.youtube.com/user/UCsgiPR2CMjsWcrtFIXQS6EQ" itemprop="sameAs">
+              <i class="fab fa-fw fa-youtube" aria-hidden="true"></i> YouTube
+            </a>
+          </li>
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Using Apollo Algorithms in Your Normal ROS Package">
+    <meta itemprop="description" content="This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.">
+    <meta itemprop="datePublished" content="October 12, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Using Apollo Algorithms in Your Normal ROS Package
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  6 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>This blog will introduce how the <a href="https://github.com/yuzhangbit/port_apollo">port_apollo</a> repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.</p>
+
+<p>The tested codes are based on the release <a href="https://github.com/ApolloAuto/apollo/releases">apollo-v3.0.0</a>.</p>
+
+<p>The goal of this project is to convert a bazel project to a cmake project while without modifying the algorithm part of source codes in apollo and keeping the existing directory structure unchanged. But the <code class="highlighter-rouge">#include</code> directories in the source files somehow need to be adapted according to the structure of cmake projects. I am not going the split the header files and source files of apollo like typical cmake
+projects. I prefer keeping codes as it was to avoid copying files and moving directories. The rational behind this is that in this way I can easily checkout the contents of the module folder of new apollo release version and throw the existing <code class="highlighter-rouge">CMakeLists.txt</code> and <code class="highlighter-rouge">package.xml</code> to the updated codes and get a new working version with minimum effort.
+So the <code class="highlighter-rouge">include</code> directory won’t exist in every ROS package folder. But you can still include project header files like other normal ROS packages assuming the headers are there.</p>
+
+<h2 id="structure-of-the-port_apollo-repo">Structure of the <a href="https://github.com/yuzhangbit/port_apollo">port_apollo</a> Repo</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>port_apollo
+├── LICENSE
+├── README.md
+├── scripts
+│   ├── build_pkg.sh  <span class="c"># handy build script for ros workspace</span>
+│   ├── docker_build_image.sh <span class="c"># docker image for CI, you can use it locally as well</span>
+│   ├── docker_compile_pkgs.sh <span class="c"># repo-build script in docker container</span>
+│   ├── Dockerfile   <span class="c"># base docker file to build a image: ubuntu 16.04 + ros kinetics</span>
+│   ├── docker_install_dependencies.sh <span class="c"># install dependencies in the docker container</span>
+│   ├── docker_run.sh  <span class="c"># run the docker for the CI test</span>
+│   ├── installer  <span class="c"># dependencies install scripts go here</span>
+│   └── tools  <span class="c"># tools scripts</span>
+└── src
+    ├── catkin_simple  <span class="c"># dependencies, ros package</span>
+    ├── glog_catkin  <span class="c"># dependencies, ros package</span>
+    ├── cmake  <span class="c"># cmake module folder to hold FindProtobuf.cmake</span>
+    ├── common  <span class="c"># apollo module, ros package </span>
+    ├── planning <span class="c"># apollo module, to be done</span>
+    ...
+    └── other_module_name <span class="c"># apollo module, to be done</span>
+</code></pre></div></div>
+<h3 id="converting-steps">Converting Steps</h3>
+<p>Let’s create a new branch named <code class="highlighter-rouge">feature_catkinizing_module</code> to hold the all the changes we are going to make. Pick a module named <code class="highlighter-rouge">module_name</code> from <code class="highlighter-rouge">planning</code>,<code class="highlighter-rouge">control</code>, <code class="highlighter-rouge">routing</code>, <code class="highlighter-rouge">perception</code>,…, etc. to convert.</p>
+
+<h4 id="1-create-a-working-branch-based-on-the-master-branch">1. Create a working branch based on the master branch</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout master <span class="o">&amp;&amp;</span> git pull <span class="c"># pull the latest codes</span>
+git checkout <span class="nt">-b</span> feature_catkinizing_module <span class="c"># create a new branch locally</span>
+git push <span class="nt">--set-upstream</span> origin feature_catkinizing_module <span class="c"># push to the remote</span>
+</code></pre></div></div>
+<h4 id="2-get-the-source-codes-of-a-module">2. Get the source codes of a module:</h4>
+<ul>
+  <li>Checkout a module <br />
+This repo holds a copy of the source codes of <a href="https://github.com/ApolloAuto/apollo/releases">apollo-v3.0.0</a> in branch <code class="highlighter-rouge">apollo_3_0_0</code>. You can use the git command to checkout a folder from the branch <code class="highlighter-rouge">apollo_3_0_0</code>.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>src <span class="o">&amp;&amp;</span> git checkout apollo_3_0_0 <span class="nt">--</span> module_name <span class="c"># copy the module_name folder from apollo_3_0_0 to current working branch</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Modify the <code class="highlighter-rouge">#include</code> directories in the header and source files in <code class="highlighter-rouge">module_name</code> directory<br />
+All the original files include the <code class="highlighter-rouge">modules/module_name</code> in the <code class="highlighter-rouge">#include</code> lines. But in cmake projects, the prefix <code class="highlighter-rouge">modules/module_name</code> is not needed. My solution is searching all the <code class="highlighter-rouge">.h</code> and <code class="highlighter-rouge">.cc</code> files for <code class="highlighter-rouge">modules/module_name/</code> and replacing it with an empty string <code class="highlighter-rouge">""</code>. In <code class="highlighter-rouge">port_apollo</code> repo, I provide a python script <a href="https://github.com/yuzhangbit/port_apollo/blob/master/scripts/tools/content_hunter.py">scripts/tools/content_hunter.py</a> to do the work automatically.  The usage is as below:
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">python</span> <span class="n">scripts</span><span class="o">/</span><span class="n">tools</span><span class="o">/</span><span class="n">content_hunter</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">module1_name</span><span class="p">]</span> <span class="p">[</span><span class="n">module2_name</span><span class="p">]</span>
+</code></pre></div>    </div>
+    <p>The module names here can be <code class="highlighter-rouge">common</code>, <code class="highlighter-rouge">planning</code>, <code class="highlighter-rouge">control</code>, <code class="highlighter-rouge">perception</code> etc.</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># for example 
+python scripts/tools/content_hunter.py common
+</code></pre></div>    </div>
+    <p><strong>Note</strong>: The script only substitutes the string <code class="highlighter-rouge">modules/module_name/</code>. If the file include <code class="highlighter-rouge">modules/other_module_name</code>, you may need to remove it manually. Or improve the python script.</p>
+  </li>
+</ul>
+
+<h4 id="3-add-ros-related-files-to-the-module_name-package">3. Add ROS-related files to the <code class="highlighter-rouge">module_name</code> package</h4>
+
+<ul>
+  <li>Create a test main file called <code class="highlighter-rouge">module_name_tests.cc</code> in the <code class="highlighter-rouge">module_name</code> folder. <br />
+This file will call the test cases you are going to add in the <code class="highlighter-rouge">CMakeLists.txt</code> file.
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="cp">#include &lt;gtest/gtest.h&gt;
+</span>  <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
+  <span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Add <code class="highlighter-rouge">CMakeLists.txt</code></p>
+
+    <div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.0<span class="p">)</span>
+  <span class="nb">project</span><span class="p">(</span>module_name VERSION 0.0.1 LANGUAGES CXX<span class="p">)</span>
+  <span class="c1"># enable c++11　feature</span>
+  <span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 11<span class="p">)</span>
+  <span class="c1">#  enable tests</span>
+  <span class="nb">set</span><span class="p">(</span>CATKIN_ENABLE_TESTING ON<span class="p">)</span>
+  <span class="c1"># for protobuf to generated interfacing files</span>
+  <span class="nb">list</span><span class="p">(</span>APPEND CMAKE_MODULE_PATH <span class="s2">"</span><span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span><span class="s2">/../cmake"</span><span class="p">)</span>
+  <span class="c1">###############</span>
+  <span class="c1">#### set the catkin dependend packages</span>
+  <span class="nb">set</span><span class="p">(</span>PKG_DEPS
+      glog_catkin
+      roscpp<span class="p">)</span>
+  <span class="nb">find_package</span><span class="p">(</span>catkin REQUIRED COMPONENTS <span class="si">${</span><span class="nv">PKG_DEPS</span><span class="si">}</span><span class="p">)</span>
+  <span class="nb">find_package</span><span class="p">(</span>Protobuf REQUIRED<span class="p">)</span>
+  <span class="c1"># set the .proto definition files  </span>
+  <span class="nb">set</span><span class="p">(</span>PROTOS
+        path/to/file.proto <span class="c1"># relative to module_name folder   </span>
+  <span class="p">)</span>
+  <span class="c1"># call the protobuf command to generate the header and source files</span>
+  <span class="nf">PROTOBUF_GENERATE_CPP</span><span class="p">(</span>PROTO_SRCS PROTO_HDRS <span class="si">${</span><span class="nv">PROTOS</span><span class="si">}</span><span class="p">)</span>
+</code></pre></div>    </div>
+    <p>Note: I write a custom cmake module called <code class="highlighter-rouge">FindProtobuf.cmake</code> to find the protobuf library and related variables. It depends on <code class="highlighter-rouge">pkg_check_modules</code> of the pkgconfig and protobuf.pc to find the right version and return below variables</p>
+    <div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  PROTOBUF_INCLUDE_DIRS
+  PROTOBUF_LIBRARIES
+  RPOTOBUF_FOUND
+</code></pre></div>    </div>
+    <p>It also provides a cutom cmake command <code class="highlighter-rouge">PROTOBUF_GENERATE_CPP</code> to generate the header and source files for the <code class="highlighter-rouge">.proto</code> definition files before compiling the library. Currently, the script does not install <code class="highlighter-rouge">.proto</code> files to the shared folder like <code class="highlighter-rouge">catkin_ws/devel/share</code> or <code class="highlighter-rouge">catkin_ws/install/share</code>. The generated files will mirror the <code class="highlighter-rouge">.proto</code> directory structure in <code class="highlighter-rouge">module_name</code> folder. So if you need to use the generated header file of some <code class="highlighter-rouge">.proto</code>, just include the <code class="highlighter-rouge">directory_to_proto</code> file but replace the extension <code class="highlighter-rouge">.proto</code> with the <code class="highlighter-rouge">.pb.h</code>. For example, <code class="highlighter-rouge">#include "common/configs/proto/vehicle_config.pb.h"</code> for <code class="highlighter-rouge">common/configs/proto/vehicle_config.proto</code>. Of course, in the same package, you don’t need the module name <code class="highlighter-rouge">common</code>.</p>
+    <div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1"># global include directories</span>
+  <span class="nb">include_directories</span><span class="p">(</span>
+      <span class="si">${</span><span class="nv">catkin_INCLUDE_DIRS</span><span class="si">}</span>
+      <span class="si">${</span><span class="nv">PROTOBUF_INCLUDE_DIRS</span><span class="si">}</span>
+  <span class="p">)</span>
+  <span class="c1"># use catkin_package command to expose the header files and the same directory structure to other catkin packages</span>
+  <span class="nf">catkin_package</span><span class="p">(</span>
+      <span class="c1">## export these folder sturcture in the package root folder to other catkin packages</span>
+      INCLUDE_DIRS <span class="si">${</span><span class="nv">CATKIN_DEVEL_PREFIX</span><span class="si">}</span>/include
+      LIBRARIES <span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>  <span class="c1"># we are going to wrap all the algorithms to one library named by the module_name</span>
+      CATKIN_DEPENDS <span class="si">${</span><span class="nv">PKG_DEPS</span><span class="si">}</span><span class="p">)</span>
+  <span class="c1"># set the source files for the library, you can select the source files you want to test in the module. Be careful with the dependencies. You can check the bazel build files for the dependency tree. You may need other module to be a catkin package first. In that case, convert other module first. Then add other modules as catkin dependencies to PKG_DEPS</span>
+  <span class="nb">set</span><span class="p">(</span>SOURCES
+      path/to/source1.cc
+      path/to/source2.cc<span class="p">)</span>
+  <span class="c1"># add library target</span>
+  <span class="nb">add_library</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+      <span class="si">${</span><span class="nv">SOURCES</span><span class="si">}</span>
+      <span class="si">${</span><span class="nv">PROTO_HDRS</span><span class="si">}</span>
+      <span class="si">${</span><span class="nv">PROTO_SRCS</span><span class="si">}</span><span class="p">)</span>
+  <span class="c1"># set the include directory only for the target</span>
+  <span class="nb">target_include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+      PUBLIC
+        $&lt;BUILD_INTERFACE:<span class="si">${</span><span class="nv">CATKIN_DEVEL_PREFIX</span><span class="si">}</span>/include&gt;
+        $&lt;BUILD_INTERFACE:<span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>&gt;
+      PRIVATE
+        $&lt;BUILD_INTERFACE:<span class="si">${</span><span class="nv">CMAKE_CURRENT_BINARY_DIR</span><span class="si">}</span>/<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>&gt;
+      <span class="p">)</span>
+  <span class="c1"># link the library</span>
+  <span class="nb">target_link_libraries</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+      <span class="si">${</span><span class="nv">catkin_LIBRARIES</span><span class="si">}</span>
+      <span class="si">${</span><span class="nv">PROTOBUF_LIBRARIES</span><span class="si">}</span>
+      <span class="p">)</span>
+  <span class="nb">if</span> <span class="p">(</span>CATKIN_ENABLE_TESTING<span class="p">)</span>
+      <span class="nf">catkin_add_gtest</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>_tests
+          module_name_tests.cc
+          path/to/test1.cc
+          path/to/test2.cc<span class="p">)</span>
+
+      <span class="nb">target_include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>_tests
+        PUBLIC
+          $&lt;BUILD_INTERFACE:<span class="si">${</span><span class="nv">CATKIN_DEVEL_PREFIX</span><span class="si">}</span>/include<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>&gt;
+          $&lt;BUILD_INTERFACE:<span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>&gt;
+        PRIVATE
+          $&lt;BUILD_INTERFACE:<span class="si">${</span><span class="nv">CMAKE_CURRENT_BINARY_DIR</span><span class="si">}</span>/<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>&gt;
+          <span class="p">)</span>
+      <span class="nb">target_link_libraries</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>_tests
+        <span class="si">${</span><span class="nv">catkin_LIBRARIES</span><span class="si">}</span>
+        <span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="p">)</span>
+
+  <span class="nb">endif</span> <span class="p">(</span>CATKIN_ENABLE_TESTING<span class="p">)</span>
+    
+  <span class="c1">#############</span>
+  <span class="c1">## Install ##</span>
+  <span class="c1">#############</span>
+  <span class="c1">## install the headers and directories</span>
+  <span class="c1">## don't miss any subfolders of the root, or you can't include the headers</span>
+  <span class="c1">## from other ros packages</span>
+  <span class="c1"># take the `common` module for example</span>
+  <span class="nb">set</span><span class="p">(</span>DIRS proto math util time vehicle_state data configs adapters status transform_listener monitor_log kv_db filters<span class="p">)</span>
+  <span class="c1"># install all the headers to devel space since we export ${CATKIN_DEVEL_PREFIX}/include/</span>
+  <span class="c1"># to catkin package instead of the include folder in the root</span>
+  <span class="nb">install</span><span class="p">(</span>DIRECTORY <span class="si">${</span><span class="nv">DIRS</span><span class="si">}</span>
+            DESTINATION <span class="si">${</span><span class="nv">CATKIN_DEVEL_PREFIX</span><span class="si">}</span>/include/<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+            FILES_MATCHING PATTERN <span class="s2">"*.h"</span>
+            PATTERN <span class="s2">".svn"</span> EXCLUDE
+    <span class="p">)</span>
+  <span class="c1"># install the header files in the module_name root folder</span>
+  <span class="nb">install</span><span class="p">(</span>FILES log.h macro.h
+            DESTINATION <span class="si">${</span><span class="nv">CATKIN_DEVEL_PREFIX</span><span class="si">}</span>/include/<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+  <span class="p">)</span>
+  <span class="c1"># install all the headers to the install space, mirror the structure</span>
+  <span class="c1"># install the generated headers</span>
+  <span class="nb">install</span><span class="p">(</span>DIRECTORY <span class="si">${</span><span class="nv">CMAKE_CURRENT_BINARY_DIR</span><span class="si">}</span>/<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+            DESTINATION <span class="si">${</span><span class="nv">CATKIN_GLOBAL_INCLUDE_DESTINATION</span><span class="si">}</span>
+            FILES_MATCHING PATTERN <span class="s2">"*.h"</span>
+            PATTERN <span class="s2">".svn"</span> EXCLUDE
+  <span class="p">)</span>
+  <span class="c1"># install all the headers to install space</span>
+  <span class="nb">install</span><span class="p">(</span>DIRECTORY <span class="si">${</span><span class="nv">DIRS</span><span class="si">}</span>
+            DESTINATION <span class="si">${</span><span class="nv">CATKIN_PACKAGE_INCLUDE_DESTINATION</span><span class="si">}</span>
+            FILES_MATCHING PATTERN <span class="s2">"*.h"</span>
+            PATTERN <span class="s2">".svn"</span> EXCLUDE
+  <span class="p">)</span>
+  <span class="c1"># install header in the module_name root folder to install space</span>
+  <span class="nb">install</span><span class="p">(</span>FILES log.h macro.h
+            DESTINATION <span class="si">${</span><span class="nv">CATKIN_PACKAGE_INCLUDE_DESTINATION</span><span class="si">}</span>
+  <span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Add <code class="highlighter-rouge">package.xml</code>, should match the ros packages defined by <code class="highlighter-rouge">PKG_DEPS</code> in <code class="highlighter-rouge">CMakeLists.txt</code>.</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;package</span> <span class="na">format=</span><span class="s">"2"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;name&gt;</span>module_name<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;description&gt;</span>apollo module_name module<span class="nt">&lt;/description&gt;</span>
+    <span class="nt">&lt;maintainer</span> <span class="na">email=</span><span class="s">"abc@abc.com"</span><span class="nt">&gt;</span>abc<span class="nt">&lt;/maintainer&gt;</span>
+    <span class="nt">&lt;license&gt;</span>Apache 2.0<span class="nt">&lt;/license&gt;</span>
+    <span class="nt">&lt;version&gt;</span>3.0.0<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;buildtool_depend&gt;</span>catkin<span class="nt">&lt;/buildtool_depend&gt;</span>
+    <span class="nt">&lt;depend&gt;</span>glog_catkin<span class="nt">&lt;/depend&gt;</span>
+    <span class="nt">&lt;depend&gt;</span>roscpp<span class="nt">&lt;/depend&gt;</span>
+  <span class="nt">&lt;/package&gt;</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="4-compile-and-test-in-port_apollo">4. Compile and Test, in <code class="highlighter-rouge">port_apollo</code></h4>
+<ul>
+  <li>
+    <p>Build and run tests</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  catkin build
+  catkin build <span class="nt">--make-args</span> tests
+  ./devel/lib/module_name/module_name
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="5-call-the-algorithms-from-the-module_name-you-just-converted-in-your-catkin-package-my_package">5. Call the algorithms from the <code class="highlighter-rouge">module_name</code> you just converted in your catkin package <code class="highlighter-rouge">my_package</code></h4>
+<ul>
+  <li>
+    <p>CMakeLists.txt</p>
+
+    <div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">find_package</span><span class="p">(</span>catkin REQUIRED COMPONENTS module_name<span class="p">)</span>
+  <span class="nf">catkin_package</span><span class="p">(</span>
+      CATKIN_DEPENDS module_name
+  <span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>package.xml</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;package</span> <span class="na">format=</span><span class="s">"2"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;name&gt;</span>my_package<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;description&gt;</span>my_package<span class="nt">&lt;/description&gt;</span>
+    <span class="nt">&lt;maintainer</span> <span class="na">email=</span><span class="s">"yu.zhang.bit@gmail.com"</span><span class="nt">&gt;</span>Yu Zhang<span class="nt">&lt;/maintainer&gt;</span>
+    <span class="nt">&lt;license&gt;</span>Apache 2.0<span class="nt">&lt;/license&gt;</span>
+    <span class="nt">&lt;version&gt;</span>0.0.1<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;buildtool_depend&gt;</span>catkin<span class="nt">&lt;/buildtool_depend&gt;</span>
+    <span class="nt">&lt;depend&gt;</span>module_name<span class="nt">&lt;/depend&gt;</span>
+  <span class="nt">&lt;/package&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Include headers from <code class="highlighter-rouge">module_name</code> package in the source files of your own package. Just follow the directory structure in <code class="highlighter-rouge">module_name</code> package. You can also use clion IDE to help you find the headers automatically.</p>
+
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="cp">#include &lt;module_name/subfolder/some_header.h&gt;
+</span></code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>A working example could be found in package <a href="https://github.com/yuzhangbit/port_apollo/tree/master/src/common">common</a>.</p>
+
+<p>Pull requests for <a href="https://github.com/yuzhangbit/port_apollo">port_apollo</a> are welcome!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#apollo" class="page__taxonomy-item" rel="tag">Apollo</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#programming" class="page__taxonomy-item" rel="tag">Programming</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#ros" class="page__taxonomy-item" rel="tag">ROS</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#tools" class="page__taxonomy-item" rel="tag">Tools</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-10-12T00:00:00+08:00">October 12, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Using+Apollo+Algorithms+in+Your+Normal+ROS+Package%20https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fporting-apollo%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fporting-apollo%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fporting-apollo%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fporting-apollo%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/tools/several-ways-of-writing-a-ros-node/" class="pagination--pager" title="Several Ways of Writing a ROS Node
+">Previous</a>
+    
+    
+      <a href="/tools/use-apt-get-behind-socks5-proxy/" class="pagination--pager" title="Use apt-get behind a socks5 proxy
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a Comment</h4>
+      <section class="fb-comments" data-href="https://yuzhangbit.github.io/tools/porting-apollo/" data-mobile="true" data-num-posts="10" data-width="100%" data-colorscheme="dark"></section>
+    
+</div>
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/nvidia-driver-and-cuda9-installation/" rel="permalink">Nvidia Driver and Cuda9.0 Installation
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  8 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Tested hardware and OS configuration:
+
+  OS: Ubuntu 16.04 LTS
+  NVIDIA Graphic Card: Quadro M1000M
+  Cuda Version: 9.0
+  Graphic Card Driver Version: 410.xx
+...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/use-apt-get-behind-socks5-proxy/" rel="permalink">Use apt-get behind a socks5 proxy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Nothing would be more frustrating than to install apt packages from sources outside of China, especially from PPA.
+If you try to update the c++ compiler to g...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/several-ways-of-writing-a-ros-node/" rel="permalink">Several Ways of Writing a ROS Node
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">The design of nodes varies according to the requirements of different applications. Selecting the right node pattern is pretty important for achieving certai...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/highlighting-author-name-for-IEEEtran-style/" rel="permalink">Highlighting an author’s name for CV using IEEEtran
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Highlighting a specific author’s name is useful and widely used in CV. But there is no elegant way to do it with existing latex packages.
+The IEEEtran.bst st...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 Yu Zhang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118867307-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118867307-1', { 'anonymize_ip': false});
+</script>
+
+
+
+
+
+
+    <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  
+
+
+
+  </body>
+</html>

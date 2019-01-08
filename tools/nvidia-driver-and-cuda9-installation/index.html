@@ -1,0 +1,1008 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.11.2 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Nvidia Driver and Cuda9.0 Installation - Yu Zhang’s Homepage</title>
+<meta name="description" content="Tested hardware and OS configuration:  OS: Ubuntu 16.04 LTS  NVIDIA Graphic Card: Quadro M1000M  Cuda Version: 9.0  Graphic Card Driver Version: 410.xx  Disable secure  boot in BIOS setting">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Yu Zhang's Homepage">
+<meta property="og:title" content="Nvidia Driver and Cuda9.0 Installation">
+<meta property="og:url" content="https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/">
+
+
+  <meta property="og:description" content="Tested hardware and OS configuration:  OS: Ubuntu 16.04 LTS  NVIDIA Graphic Card: Quadro M1000M  Cuda Version: 9.0  Graphic Card Driver Version: 410.xx  Disable secure  boot in BIOS setting">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2019-01-06T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Yu Zhang",
+      "url": "https://yuzhangbit.github.io",
+      "sameAs": "https://yuzhangbit.github.io"
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Yu Zhang's Homepage Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KQ4PZJF');</script>
+<!-- End Google Tag Manager -->
+
+    <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Nvidia Driver and Cuda9.0 Installation | Yu Zhang’s Homepage</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Nvidia Driver and Cuda9.0 Installation" />
+<meta name="author" content="Yu Zhang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Tested hardware and OS configuration: OS: Ubuntu 16.04 LTS NVIDIA Graphic Card: Quadro M1000M Cuda Version: 9.0 Graphic Card Driver Version: 410.xx Disable secure boot in BIOS setting" />
+<meta property="og:description" content="Tested hardware and OS configuration: OS: Ubuntu 16.04 LTS NVIDIA Graphic Card: Quadro M1000M Cuda Version: 9.0 Graphic Card Driver Version: 410.xx Disable secure boot in BIOS setting" />
+<link rel="canonical" href="https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/" />
+<meta property="og:url" content="https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/" />
+<meta property="og:site_name" content="Yu Zhang’s Homepage" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-01-06T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Yu Zhang" />
+<script type="application/ld+json">
+{"description":"Tested hardware and OS configuration: OS: Ubuntu 16.04 LTS NVIDIA Graphic Card: Quadro M1000M Cuda Version: 9.0 Graphic Card Driver Version: 410.xx Disable secure boot in BIOS setting","author":{"@type":"Person","name":"Yu Zhang"},"@type":"BlogPosting","url":"https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/","headline":"Nvidia Driver and Cuda9.0 Installation","dateModified":"2019-01-06T00:00:00+08:00","datePublished":"2019-01-06T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KQ4PZJF"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">Yu Zhang's Homepage</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/" >Home</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/videos/" >Videos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/projects_index/" >Projects</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/blogs/" >Blogs</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://github.com/yuzhangbit" >Codes</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/publications/" >Publications</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/about/" >CV</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://yuzhangbit.github.io/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="/categories/#tools" itemprop="item"><span itemprop="name">Tools</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Nvidia Driver and Cuda9.0 Installation</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/my_bio_s.jpg" alt="Yu Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yu Zhang</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        PhD student @ IVRC at Beijing Institute of Technology, visiting student @ WAVELab at University of Waterloo.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Beijing, China</span>
+        </li>
+      
+
+      
+        <li>
+          <a href="http://yuzhangbit.github.io" itemprop="url">
+            <i class="fas fa-fw fa-link" aria-hidden="true"></i> Website
+          </a>
+        </li>
+      
+
+      
+        <li>
+          <a href="mailto:yu.zhang.bit@gmail.com">
+            <meta itemprop="email" content="yu.zhang.bit@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/yuzhangbit" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        
+          <li>
+            <a href="https://www.youtube.com/user/UCsgiPR2CMjsWcrtFIXQS6EQ" itemprop="sameAs">
+              <i class="fab fa-fw fa-youtube" aria-hidden="true"></i> YouTube
+            </a>
+          </li>
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Nvidia Driver and Cuda9.0 Installation">
+    <meta itemprop="description" content="Tested hardware and OS configuration:  OS: Ubuntu 16.04 LTS  NVIDIA Graphic Card: Quadro M1000M  Cuda Version: 9.0  Graphic Card Driver Version: 410.xx  Disable secure  boot in BIOS setting">
+    <meta itemprop="datePublished" content="January 06, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Nvidia Driver and Cuda9.0 Installation
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  7 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Tested hardware and OS configuration:</p>
+<ul>
+  <li>OS: Ubuntu 16.04 LTS</li>
+  <li>NVIDIA Graphic Card: Quadro M1000M</li>
+  <li>Cuda Version: 9.0</li>
+  <li>Graphic Card Driver Version: 410.xx</li>
+  <li>Disable <code class="highlighter-rouge">secure  boot</code> in BIOS setting</li>
+</ul>
+
+<p>The recommended way to install the Nvidia driver and Cuda is using <code class="highlighter-rouge">.run</code> files since the <code class="highlighter-rouge">run</code> files provide flexibility for configuration. You can get rid of the login loop mess-up caused by the bundled <code class="highlighter-rouge">opengl</code> libs in Nvidia drivers with care.</p>
+
+<p>Let’s start with the <code class="highlighter-rouge">dkms(Dynamic Kernel Module Support)</code> package. This is a super useful package when you install drivers. Sometimes your laptop may have the latest hardware that the ubuntu does not support. You have to install the corresponding drivers by building from source codes. The issue is that if the system updates the kernel automatically, you basically lose your manually-installed drivers for the hardware. You have to re-install it. But with <code class="highlighter-rouge">dkms</code> package, you don’t need to worry about this problem anymore. The rebuild of the modules is handled automatically when a kernel is upgraded.</p>
+
+<h2 id="preliminary">Preliminary</h2>
+<ol>
+  <li>Install <code class="highlighter-rouge">dkms</code> via <code class="highlighter-rouge">apt-get</code>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>dkms
+</code></pre></div>    </div>
+  </li>
+  <li>Install the kernel header with
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>linux-headers-<span class="k">$(</span><span class="nb">uname</span> <span class="nt">-r</span><span class="k">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Download the nvidia driver according to your graphic card model from <a href="https://www.nvidia.com/Download/index.aspx?lang=en-us">nvidia-website</a> and the corresponding cuda-toolkit from <a href="https://developer.nvidia.com/cuda-90-download-archive?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu&amp;target_version=1604&amp;target_type=runfilelocal">here</a>. They look like something like <code class="highlighter-rouge">NVIDIA-Linux-x86_64-xxx.xx.run</code> and <code class="highlighter-rouge">cuda_9.0.176_384.81_linux.run</code>. Make them executable by
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x NVIDIA-Linux-x86_64-410.93.run
+<span class="nb">chmod</span> +x cuda_9.0.176_384.81_linux.run
+</code></pre></div>    </div>
+    <p>You may download the four patches for the cuda9.0 as well.</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x cuda_9.0.176.1_linux.run
+<span class="nb">chmod</span> +x cuda_9.0.176.2_linux.run
+<span class="nb">chmod</span> +x cuda_9.0.176.3_linux.run
+<span class="nb">chmod</span> +x cuda_9.0.176.4_linux.run
+</code></pre></div>    </div>
+  </li>
+  <li>Blacklist the nouveau. The nouveau coming with ubuntu systems will affect the installation of nvidia drivers. Blacklist it by
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># create blacklist file for nouveau</span>
+<span class="nb">sudo touch</span> /etc/modprobe.d/blacklist-nouveau.conf
+<span class="c"># write the content</span>
+<span class="nb">sudo </span>bash <span class="nt">-c</span> <span class="s2">"echo 'blacklist nouveau
+options nouveau modeset=0' &gt; /etc/modprobe.d/blacklist-nouveau.conf"</span>
+<span class="c"># update the blacklist</span>
+<span class="nb">sudo </span>update-initramfs <span class="nt">-u</span>
+</code></pre></div>    </div>
+    <p>If you get nothing output in the terminal by <code class="highlighter-rouge">lsmod | grep nouveau</code>, you are good to go.</p>
+  </li>
+  <li>Purge the nvidia driver installed via PPA by
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get purge nvidia<span class="k">*</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="installation">Installation</h2>
+<ol>
+  <li>Kill the x-server by
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service lightdm stop
+</code></pre></div>    </div>
+  </li>
+  <li>Login to the system from tty by <code class="highlighter-rouge">alt+ctrl+F1</code>, login with your user name and password.</li>
+  <li>Navigate to the directory of downloaded <code class="highlighter-rouge">run</code> files, install graphic driver in headless mode:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">sudo</span> ./NVIDIA-Linux-x86_64-410.93.run <span class="nt">-no-opengl-files</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Install cuda9.0
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> ./cuda_9.0.176_384.81_linux.run <span class="nt">--no-opengl-libs</span>
+</code></pre></div>    </div>
+    <p>During the installation,</p>
+    <ul>
+      <li><strong>accept</strong> the EULA conditions</li>
+      <li>say <strong>NO</strong> to installing the nvidia drivers</li>
+      <li>say <strong>YES</strong> to installing cuda toolkit</li>
+      <li>say <strong>YES</strong> to installing cuda samples</li>
+      <li>say <strong>YES</strong> to creating a symbolic link for cuda</li>
+      <li>say <strong>NO</strong> to rebuilding any Xserver configuration with nvidia</li>
+    </ul>
+  </li>
+  <li>Set the env variables for cuda in <code class="highlighter-rouge">~/.bashrc</code>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>bash <span class="nt">-c</span> <span class="s2">"echo 'export PATH=/usr/local/cuda/bin:</span><span class="nv">$PATH</span><span class="s2">' &gt;&gt; ~/.bashrc"</span>
+<span class="nb">sudo </span>bash <span class="nt">-c</span> <span class="s2">"echo '/usr/local/cuda/lib64/' &gt; /etc/ld.so.conf.d/cuda.conf"</span>
+<span class="nb">source</span> ~/.bashrc
+<span class="nb">sudo </span>ldconfig
+</code></pre></div>    </div>
+    <p><strong>NOTE</strong>: Be careful with <code class="highlighter-rouge">&gt;&gt;</code> and <code class="highlighter-rouge">&gt;</code>, the symbol <code class="highlighter-rouge">&gt;</code> will overwrite the file. You don’t want to overwrite your <code class="highlighter-rouge">.bashrc</code> file.<br />
+Reboot or get back to the window mode by:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service lightdm start
+</code></pre></div>    </div>
+    <p>You should get similar outputs as below by <code class="highlighter-rouge">nvidia-smi</code> command:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Mon Jan  7 21:00:08 2019       
+  +-----------------------------------------------------------------------------+
+  | NVIDIA-SMI 410.93       Driver Version: 410.93       CUDA Version: 10.0     |
+  |-------------------------------+----------------------+----------------------+
+  | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+  | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+  |<span class="o">===============================</span>+<span class="o">======================</span>+<span class="o">======================</span>|
+  |   0  Quadro M1000M       Off  | 00000000:01:00.0 Off |                  N/A |
+  | N/A   51C    P0    N/A /  N/A |      0MiB /  2004MiB |      0%      Default |
+  +-------------------------------+----------------------+----------------------+
+  +-----------------------------------------------------------------------------+
+  | Processes:                                                       GPU Memory |
+  |  GPU       PID   Type   Process name                             Usage      |
+  |<span class="o">=============================================================================</span>|
+  |  No running processes found                                                 |
+  +-----------------------------------------------------------------------------+
+</code></pre></div>    </div>
+  </li>
+  <li>Apply the patches if you need them (<strong>optional</strong>):
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> ./cuda_9.0.176.1_linux.run  <span class="c"># accept and Enter</span>
+<span class="nb">sudo</span> ./cuda_9.0.176.2_linux.run  <span class="c"># accept and Enter</span>
+<span class="nb">sudo</span> ./cuda_9.0.176.3_linux.run  <span class="c"># accept and Enter</span>
+<span class="nb">sudo</span> ./cuda_9.0.176.4_linux.run  <span class="c"># accept and Enter  </span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="cuda-testing-with-samples">Cuda Testing with Samples</h2>
+<ul>
+  <li>install compiler
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> gcc build-essential
+</code></pre></div>    </div>
+  </li>
+  <li>compiling
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">cd</span> ~/NVIDIA_CUDA-9.0_Samples
+  make <span class="nt">-j8</span>
+</code></pre></div>    </div>
+  </li>
+  <li>testing
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  bin/x86_64/linux/release/deviceQuery <span class="c"># test 1</span>
+  bin/x86_64/linux/release/bandwidthTest <span class="c"># test 2</span>
+</code></pre></div>    </div>
+  </li>
+  <li>you should get something like this:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  bin/x86_64/linux/release/deviceQuery Starting...
+  CUDA Device Query <span class="o">(</span>Runtime API<span class="o">)</span> version <span class="o">(</span>CUDART static linking<span class="o">)</span>
+  Detected 1 CUDA Capable device<span class="o">(</span>s<span class="o">)</span>
+  Device 0: <span class="s2">"Quadro M1000M"</span>
+  CUDA Driver Version / Runtime Version          10.0 / 9.0
+  CUDA Capability Major/Minor version number:    5.0
+  Total amount of global memory:                 2004 MBytes <span class="o">(</span>2101870592 bytes<span class="o">)</span>
+  <span class="o">(</span> 4<span class="o">)</span> Multiprocessors, <span class="o">(</span>128<span class="o">)</span> CUDA Cores/MP:     512 CUDA Cores
+  GPU Max Clock rate:                            1072 MHz <span class="o">(</span>1.07 GHz<span class="o">)</span>
+  Memory Clock rate:                             2505 Mhz
+  Memory Bus Width:                              128-bit
+  L2 Cache Size:                                 2097152 bytes
+  Maximum Texture Dimension Size <span class="o">(</span>x,y,z<span class="o">)</span>         <span class="nv">1D</span><span class="o">=(</span>65536<span class="o">)</span>, <span class="nv">2D</span><span class="o">=(</span>65536, 65536<span class="o">)</span>, <span class="nv">3D</span><span class="o">=(</span>4096, 4096, 4096<span class="o">)</span>
+  Maximum Layered 1D Texture Size, <span class="o">(</span>num<span class="o">)</span> layers  <span class="nv">1D</span><span class="o">=(</span>16384<span class="o">)</span>, 2048 layers
+  Maximum Layered 2D Texture Size, <span class="o">(</span>num<span class="o">)</span> layers  <span class="nv">2D</span><span class="o">=(</span>16384, 16384<span class="o">)</span>, 2048 layers
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       49152 bytes
+  Total number of registers available per block: 65536
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  2048
+  Maximum number of threads per block:           1024
+  Max dimension size of a thread block <span class="o">(</span>x,y,z<span class="o">)</span>: <span class="o">(</span>1024, 1024, 64<span class="o">)</span>
+  Max dimension size of a grid size    <span class="o">(</span>x,y,z<span class="o">)</span>: <span class="o">(</span>2147483647, 65535, 65535<span class="o">)</span>
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             512 bytes
+  Concurrent copy and kernel execution:          Yes with 1 copy engine<span class="o">(</span>s<span class="o">)</span>
+  Run <span class="nb">time </span>limit on kernels:                     No
+  Integrated GPU sharing Host Memory:            No
+  Support host page-locked memory mapping:       Yes
+  Alignment requirement <span class="k">for </span>Surfaces:            Yes
+  Device has ECC support:                        Disabled
+  Device supports Unified Addressing <span class="o">(</span>UVA<span class="o">)</span>:      Yes
+  Supports Cooperative Kernel Launch:            No
+  Supports MultiDevice Co-op Kernel Launch:      No
+  Device PCI Domain ID / Bus ID / location ID:   0 / 1 / 0
+  Compute Mode:
+ &lt; Default <span class="o">(</span>multiple host threads can use ::cudaSetDevice<span class="o">()</span> with device simultaneously<span class="o">)</span> <span class="o">&gt;</span>
+ deviceQuery, CUDA Driver <span class="o">=</span> CUDART, CUDA Driver Version <span class="o">=</span> 10.0, CUDA Runtime Version <span class="o">=</span> 9.0, NumDevs <span class="o">=</span> 1
+ Result <span class="o">=</span> PASS
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>If you get stuck in the login loop by accidently installing nvidia driver with the bundled opengl library, uninstall the nvidia driver and cuda library by</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> /usr/bin/nvidia-uninstall
+<span class="nb">sudo</span> /usr/local/cuda-9.0/bin/uninstall_cuda_9.0.pl
+</code></pre></div></div>
+<p>and then reboot. You are back to normal.</p>
+
+<h2 id="install-cudnn">Install cuDNN</h2>
+<p>Pretty easy!</p>
+<ul>
+  <li>Join the <a href="https://developer.nvidia.com/accelerated-computing-developer">NVIDIA Developer Program</a> and get the permission to download the cuDNN.</li>
+  <li>Download the cuDNN from <a href="https://developer.nvidia.com/rdp/cudnn-download">here</a>, select the deb version that matches cuda9.0:
+    <ul>
+      <li>cuDNN Runtime Library for Ubuntu16.04 (Deb):  <code class="highlighter-rouge">libcudnn7_7.4.2.24-1+cuda9.0_amd64.deb</code></li>
+      <li>cuDNN Developer Library for Ubuntu16.04 (Deb):  <code class="highlighter-rouge">libcudnn7-dev_7.4.2.24-1+cuda9.0_amd64.deb</code></li>
+      <li>cuDNN Code Samples and User Guide for Ubuntu16.04 (Deb): <code class="highlighter-rouge">libcudnn7-doc_7.4.2.24-1+cuda9.0_amd64.deb</code></li>
+    </ul>
+  </li>
+  <li>Install cuDNN by
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>dpkg <span class="nt">-i</span> libcudnn7_7.4.2.24-1+cuda9.0_amd64.deb
+<span class="nb">sudo </span>dpkg <span class="nt">-i</span> libcudnn7-dev_7.4.2.24-1+cuda9.0_amd64.deb
+<span class="nb">sudo </span>dpkg <span class="nt">-i</span> libcudnn7-doc_7.4.2.24-1+cuda9.0_amd64.deb
+</code></pre></div>    </div>
+  </li>
+  <li>Testing
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /usr/src/cudnn_samples_v7/mnistCUDNN
+sudo make -j8
+./mnistCUDNN
+</code></pre></div>    </div>
+    <p>You should get something like this if installed successfully</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudnnGetVersion<span class="o">()</span> : 7402 , CUDNN_VERSION from cudnn.h : 7402 <span class="o">(</span>7.4.2<span class="o">)</span>
+Host compiler version : GCC 5.5.0
+There are 1 CUDA capable devices on your machine :
+device 0 : sms  4  Capabilities 5.0, SmClock 1071.5 Mhz, MemSize <span class="o">(</span>Mb<span class="o">)</span> 2004, MemClock 2505.0 Mhz, <span class="nv">Ecc</span><span class="o">=</span>0, <span class="nv">boardGroupID</span><span class="o">=</span>0
+Using device 0
+Testing single precision
+Loading image data/one_28x28.pgm
+Performing forward propagation ...
+Testing cudnnGetConvolutionForwardAlgorithm ...
+Fastest algorithm is Algo 1
+Testing cudnnFindConvolutionForwardAlgorithm ...
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 0: 0.029920 <span class="nb">time </span>requiring 0 memory
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 7: 1.930336 <span class="nb">time </span>requiring 2057744 memory
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 1: 2.276768 <span class="nb">time </span>requiring 3464 memory
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 5: 2.370656 <span class="nb">time </span>requiring 203008 memory
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 2: 17.794369 <span class="nb">time </span>requiring 57600 memory
+Resulting weights from Softmax:
+0.0000000 0.9999399 0.0000000 0.0000000 0.0000561 0.0000000 0.0000012 0.0000017 0.0000010 0.0000000
+Loading image data/three_28x28.pgm
+Performing forward propagation ...
+Resulting weights from Softmax:
+0.0000000 0.0000000 0.0000000 0.9999288 0.0000000 0.0000711 0.0000000 0.0000000 0.0000000 0.0000000
+Loading image data/five_28x28.pgm
+Performing forward propagation ...
+Resulting weights from Softmax:
+0.0000000 0.0000008 0.0000000 0.0000002 0.0000000 0.9999820 0.0000154 0.0000000 0.0000012 0.0000006
+Result of classification: 1 3 5
+Test passed!
+Testing half precision <span class="o">(</span>math <span class="k">in </span>single precision<span class="o">)</span>
+Loading image data/one_28x28.pgm
+Performing forward propagation ...
+Testing cudnnGetConvolutionForwardAlgorithm ...
+Fastest algorithm is Algo 1
+Testing cudnnFindConvolutionForwardAlgorithm ...
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 0: 0.025600 <span class="nb">time </span>requiring 0 memory
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 1: 0.033376 <span class="nb">time </span>requiring 3464 memory
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 4: 0.170336 <span class="nb">time </span>requiring 207360 memory
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 7: 0.340768 <span class="nb">time </span>requiring 2057744 memory
+^^^^ CUDNN_STATUS_SUCCESS <span class="k">for </span>Algo 5: 0.551552 <span class="nb">time </span>requiring 203008 memory
+Resulting weights from Softmax:
+0.0000001 1.0000000 0.0000001 0.0000000 0.0000563 0.0000001 0.0000012 0.0000017 0.0000010 0.0000001
+Loading image data/three_28x28.pgm
+Performing forward propagation ...
+Resulting weights from Softmax:
+0.0000000 0.0000000 0.0000000 1.0000000 0.0000000 0.0000714 0.0000000 0.0000000 0.0000000 0.0000000
+Loading image data/five_28x28.pgm
+Performing forward propagation ...
+Resulting weights from Softmax:
+0.0000000 0.0000008 0.0000000 0.0000002 0.0000000 1.0000000 0.0000154 0.0000000 0.0000012 0.0000006
+Result of classification: 1 3 5
+Test passed!
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="install-tensorflow-gpu">Install tensorflow-gpu</h2>
+<p>Take the python3 from the system as an example:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>pip3 <span class="nb">install</span> <span class="nt">--upgrade</span> tensorflow-gpu
+</code></pre></div></div>
+<h3 id="test">Test</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3
+<span class="o">&gt;&gt;&gt;</span> import tensorflow as tf
+<span class="o">&gt;&gt;&gt;</span> sess <span class="o">=</span> <span class="se">\</span>
+tf.Session<span class="o">(</span><span class="nv">config</span><span class="o">=</span>tf.ConfigProto<span class="o">(</span><span class="nv">log_device_placement</span><span class="o">=</span>True<span class="o">))</span>
+</code></pre></div></div>
+
+<p>The output should be something like this:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2019-01-07 22:54:32.219774: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-01-07 22:54:32.697484: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node <span class="nb">read </span>from SysFS had negative value <span class="o">(</span><span class="nt">-1</span><span class="o">)</span>, but there must be at least one NUMA node, so returning NUMA node zero
+2019-01-07 22:54:32.697992: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties:
+name: Quadro M1000M major: 5 minor: 0 memoryClockRate<span class="o">(</span>GHz<span class="o">)</span>: 1.0715
+pciBusID: 0000:01:00.0
+totalMemory: 1.96GiB freeMemory: 1.92GiB
+2019-01-07 22:54:32.698012: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 0
+2019-01-07 22:58:26.675975: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-01-07 22:58:26.676021: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      0
+2019-01-07 22:58:26.676036: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 0:   N
+2019-01-07 22:58:26.676508: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device <span class="o">(</span>/job:localhost/replica:0/task:0/device:GPU:0 with 1683 MB memory<span class="o">)</span> -&gt; physical GPU <span class="o">(</span>device: 0, name: Quadro M1000M, pci bus <span class="nb">id</span>: 0000:01:00.0, compute capability: 5.0<span class="o">)</span>
+Device mapping:
+/job:localhost/replica:0/task:0/device:XLA_GPU:0 -&gt; device: XLA_GPU device
+/job:localhost/replica:0/task:0/device:XLA_CPU:0 -&gt; device: XLA_CPU device
+/job:localhost/replica:0/task:0/device:GPU:0 -&gt; device: 0, name: Quadro M1000M, pci bus <span class="nb">id</span>: 0000:01:00.0, compute capability: 5.0
+2019-01-07 22:58:26.678076: I tensorflow/core/common_runtime/direct_session.cc:307] Device mapping:
+/job:localhost/replica:0/task:0/device:XLA_GPU:0 -&gt; device: XLA_GPU device
+/job:localhost/replica:0/task:0/device:XLA_CPU:0 -&gt; device: XLA_CPU device
+/job:localhost/replica:0/task:0/device:GPU:0 -&gt; device: 0, name: Quadro M1000M, pci bus <span class="nb">id</span>: 0000:01:00.0, compute capability: 5.0
+</code></pre></div></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#gpu" class="page__taxonomy-item" rel="tag">gpu</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#tools" class="page__taxonomy-item" rel="tag">Tools</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-01-06T00:00:00+08:00">January 06, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Nvidia+Driver+and+Cuda9.0+Installation%20https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fnvidia-driver-and-cuda9-installation%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fnvidia-driver-and-cuda9-installation%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fnvidia-driver-and-cuda9-installation%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fnvidia-driver-and-cuda9-installation%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/tools/use-apt-get-behind-socks5-proxy/" class="pagination--pager" title="Use apt-get behind a socks5 proxy
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a Comment</h4>
+      <section class="fb-comments" data-href="https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/" data-mobile="true" data-num-posts="10" data-width="100%" data-colorscheme="dark"></section>
+    
+</div>
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/use-apt-get-behind-socks5-proxy/" rel="permalink">Use apt-get behind a socks5 proxy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Nothing would be more frustrating than to install apt packages from sources outside of China, especially from PPA.
+If you try to update the c++ compiler to g...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/porting-apollo/" rel="permalink">Using Apollo Algorithms in Your Normal ROS Package
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  6 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package ...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/several-ways-of-writing-a-ros-node/" rel="permalink">Several Ways of Writing a ROS Node
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">The design of nodes varies according to the requirements of different applications. Selecting the right node pattern is pretty important for achieving certai...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/highlighting-author-name-for-IEEEtran-style/" rel="permalink">Highlighting an author’s name for CV using IEEEtran
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Highlighting a specific author’s name is useful and widely used in CV. But there is no elegant way to do it with existing latex packages.
+The IEEEtran.bst st...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 Yu Zhang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118867307-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118867307-1', { 'anonymize_ip': false});
+</script>
+
+
+
+
+
+
+    <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  
+
+
+
+  </body>
+</html>

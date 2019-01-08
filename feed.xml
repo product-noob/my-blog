@@ -1,0 +1,1123 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.1">Jekyll</generator><link href="https://yuzhangbit.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://yuzhangbit.github.io/" rel="alternate" type="text/html" /><updated>2019-01-08T10:44:47+08:00</updated><id>https://yuzhangbit.github.io/</id><title type="html">Yu Zhang’s Homepage</title><subtitle>My personal website where you can know me and get in touch with me.</subtitle><author><name>Yu Zhang</name></author><entry><title type="html">Nvidia Driver and Cuda9.0 Installation</title><link href="https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/" rel="alternate" type="text/html" title="Nvidia Driver and Cuda9.0 Installation" /><published>2019-01-06T00:00:00+08:00</published><updated>2019-01-06T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/nvidia-driver-and-cuda9-installation/">&lt;p&gt;Tested hardware and OS configuration:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;OS: Ubuntu 16.04 LTS&lt;/li&gt;
+  &lt;li&gt;NVIDIA Graphic Card: Quadro M1000M&lt;/li&gt;
+  &lt;li&gt;Cuda Version: 9.0&lt;/li&gt;
+  &lt;li&gt;Graphic Card Driver Version: 410.xx&lt;/li&gt;
+  &lt;li&gt;Disable &lt;code class=&quot;highlighter-rouge&quot;&gt;secure  boot&lt;/code&gt; in BIOS setting&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The recommended way to install the Nvidia driver and Cuda is using &lt;code class=&quot;highlighter-rouge&quot;&gt;.run&lt;/code&gt; files since the &lt;code class=&quot;highlighter-rouge&quot;&gt;run&lt;/code&gt; files provide flexibility for configuration. You can get rid of the login loop mess-up caused by the bundled &lt;code class=&quot;highlighter-rouge&quot;&gt;opengl&lt;/code&gt; libs in Nvidia drivers with care.&lt;/p&gt;
+
+&lt;p&gt;Let’s start with the &lt;code class=&quot;highlighter-rouge&quot;&gt;dkms(Dynamic Kernel Module Support)&lt;/code&gt; package. This is a super useful package when you install drivers. Sometimes your laptop may have the latest hardware that the ubuntu does not support. You have to install the corresponding drivers by building from source codes. The issue is that if the system updates the kernel automatically, you basically lose your manually-installed drivers for the hardware. You have to re-install it. But with &lt;code class=&quot;highlighter-rouge&quot;&gt;dkms&lt;/code&gt; package, you don’t need to worry about this problem anymore. The rebuild of the modules is handled automatically when a kernel is upgraded.&lt;/p&gt;
+
+&lt;h2 id=&quot;preliminary&quot;&gt;Preliminary&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;Install &lt;code class=&quot;highlighter-rouge&quot;&gt;dkms&lt;/code&gt; via &lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get&lt;/code&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;dkms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Install the kernel header with
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;linux-headers-&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;uname&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Download the nvidia driver according to your graphic card model from &lt;a href=&quot;https://www.nvidia.com/Download/index.aspx?lang=en-us&quot;&gt;nvidia-website&lt;/a&gt; and the corresponding cuda-toolkit from &lt;a href=&quot;https://developer.nvidia.com/cuda-90-download-archive?target_os=Linux&amp;amp;target_arch=x86_64&amp;amp;target_distro=Ubuntu&amp;amp;target_version=1604&amp;amp;target_type=runfilelocal&quot;&gt;here&lt;/a&gt;. They look like something like &lt;code class=&quot;highlighter-rouge&quot;&gt;NVIDIA-Linux-x86_64-xxx.xx.run&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cuda_9.0.176_384.81_linux.run&lt;/code&gt;. Make them executable by
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x NVIDIA-Linux-x86_64-410.93.run
+&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x cuda_9.0.176_384.81_linux.run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;You may download the four patches for the cuda9.0 as well.&lt;/p&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x cuda_9.0.176.1_linux.run
+&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x cuda_9.0.176.2_linux.run
+&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x cuda_9.0.176.3_linux.run
+&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x cuda_9.0.176.4_linux.run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Blacklist the nouveau. The nouveau coming with ubuntu systems will affect the installation of nvidia drivers. Blacklist it by
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# create blacklist file for nouveau&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo touch&lt;/span&gt; /etc/modprobe.d/blacklist-nouveau.conf
+&lt;span class=&quot;c&quot;&gt;# write the content&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;bash &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;echo 'blacklist nouveau
+options nouveau modeset=0' &amp;gt; /etc/modprobe.d/blacklist-nouveau.conf&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# update the blacklist&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;update-initramfs &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;If you get nothing output in the terminal by &lt;code class=&quot;highlighter-rouge&quot;&gt;lsmod | grep nouveau&lt;/code&gt;, you are good to go.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Purge the nvidia driver installed via PPA by
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get purge nvidia&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;Kill the x-server by
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;service lightdm stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Login to the system from tty by &lt;code class=&quot;highlighter-rouge&quot;&gt;alt+ctrl+F1&lt;/code&gt;, login with your user name and password.&lt;/li&gt;
+  &lt;li&gt;Navigate to the directory of downloaded &lt;code class=&quot;highlighter-rouge&quot;&gt;run&lt;/code&gt; files, install graphic driver in headless mode:
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; ./NVIDIA-Linux-x86_64-410.93.run &lt;span class=&quot;nt&quot;&gt;-no-opengl-files&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Install cuda9.0
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; ./cuda_9.0.176_384.81_linux.run &lt;span class=&quot;nt&quot;&gt;--no-opengl-libs&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;During the installation,&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;accept&lt;/strong&gt; the EULA conditions&lt;/li&gt;
+      &lt;li&gt;say &lt;strong&gt;NO&lt;/strong&gt; to installing the nvidia drivers&lt;/li&gt;
+      &lt;li&gt;say &lt;strong&gt;YES&lt;/strong&gt; to installing cuda toolkit&lt;/li&gt;
+      &lt;li&gt;say &lt;strong&gt;YES&lt;/strong&gt; to installing cuda samples&lt;/li&gt;
+      &lt;li&gt;say &lt;strong&gt;YES&lt;/strong&gt; to creating a symbolic link for cuda&lt;/li&gt;
+      &lt;li&gt;say &lt;strong&gt;NO&lt;/strong&gt; to rebuilding any Xserver configuration with nvidia&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Set the env variables for cuda in &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.bashrc&lt;/code&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;bash &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;echo 'export PATH=/usr/local/cuda/bin:&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;' &amp;gt;&amp;gt; ~/.bashrc&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;bash &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;echo '/usr/local/cuda/lib64/' &amp;gt; /etc/ld.so.conf.d/cuda.conf&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ldconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: Be careful with &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&amp;gt;&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;, the symbol &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt; will overwrite the file. You don’t want to overwrite your &lt;code class=&quot;highlighter-rouge&quot;&gt;.bashrc&lt;/code&gt; file.&lt;br /&gt;
+Reboot or get back to the window mode by:&lt;/p&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;service lightdm start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;You should get similar outputs as below by &lt;code class=&quot;highlighter-rouge&quot;&gt;nvidia-smi&lt;/code&gt; command:&lt;/p&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  Mon Jan  7 21:00:08 2019       
+  +-----------------------------------------------------------------------------+
+  | NVIDIA-SMI 410.93       Driver Version: 410.93       CUDA Version: 10.0     |
+  |-------------------------------+----------------------+----------------------+
+  | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+  | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+  |&lt;span class=&quot;o&quot;&gt;===============================&lt;/span&gt;+&lt;span class=&quot;o&quot;&gt;======================&lt;/span&gt;+&lt;span class=&quot;o&quot;&gt;======================&lt;/span&gt;|
+  |   0  Quadro M1000M       Off  | 00000000:01:00.0 Off |                  N/A |
+  | N/A   51C    P0    N/A /  N/A |      0MiB /  2004MiB |      0%      Default |
+  +-------------------------------+----------------------+----------------------+
+  +-----------------------------------------------------------------------------+
+  | Processes:                                                       GPU Memory |
+  |  GPU       PID   Type   Process name                             Usage      |
+  |&lt;span class=&quot;o&quot;&gt;=============================================================================&lt;/span&gt;|
+  |  No running processes found                                                 |
+  +-----------------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Apply the patches if you need them (&lt;strong&gt;optional&lt;/strong&gt;):
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; ./cuda_9.0.176.1_linux.run  &lt;span class=&quot;c&quot;&gt;# accept and Enter&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; ./cuda_9.0.176.2_linux.run  &lt;span class=&quot;c&quot;&gt;# accept and Enter&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; ./cuda_9.0.176.3_linux.run  &lt;span class=&quot;c&quot;&gt;# accept and Enter&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; ./cuda_9.0.176.4_linux.run  &lt;span class=&quot;c&quot;&gt;# accept and Enter  &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;cuda-testing-with-samples&quot;&gt;Cuda Testing with Samples&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;install compiler
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; gcc build-essential
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;compiling
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/NVIDIA_CUDA-9.0_Samples
+  make &lt;span class=&quot;nt&quot;&gt;-j8&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;testing
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  bin/x86_64/linux/release/deviceQuery &lt;span class=&quot;c&quot;&gt;# test 1&lt;/span&gt;
+  bin/x86_64/linux/release/bandwidthTest &lt;span class=&quot;c&quot;&gt;# test 2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;you should get something like this:
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  bin/x86_64/linux/release/deviceQuery Starting...
+  CUDA Device Query &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Runtime API&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; version &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CUDART static linking&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Detected 1 CUDA Capable device&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Device 0: &lt;span class=&quot;s2&quot;&gt;&quot;Quadro M1000M&quot;&lt;/span&gt;
+  CUDA Driver Version / Runtime Version          10.0 / 9.0
+  CUDA Capability Major/Minor version number:    5.0
+  Total amount of global memory:                 2004 MBytes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2101870592 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; 4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Multiprocessors, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;128&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; CUDA Cores/MP:     512 CUDA Cores
+  GPU Max Clock rate:                            1072 MHz &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.07 GHz&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Memory Clock rate:                             2505 Mhz
+  Memory Bus Width:                              128-bit
+  L2 Cache Size:                                 2097152 bytes
+  Maximum Texture Dimension Size &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;x,y,z&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;         &lt;span class=&quot;nv&quot;&gt;1D&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;65536&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;2D&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;65536, 65536&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;3D&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;4096, 4096, 4096&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Maximum Layered 1D Texture Size, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;num&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; layers  &lt;span class=&quot;nv&quot;&gt;1D&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;16384&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 2048 layers
+  Maximum Layered 2D Texture Size, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;num&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; layers  &lt;span class=&quot;nv&quot;&gt;2D&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;16384, 16384&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 2048 layers
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       49152 bytes
+  Total number of registers available per block: 65536
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  2048
+  Maximum number of threads per block:           1024
+  Max dimension size of a thread block &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;x,y,z&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1024, 1024, 64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Max dimension size of a grid size    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;x,y,z&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2147483647, 65535, 65535&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             512 bytes
+  Concurrent copy and kernel execution:          Yes with 1 copy engine&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Run &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;limit on kernels:                     No
+  Integrated GPU sharing Host Memory:            No
+  Support host page-locked memory mapping:       Yes
+  Alignment requirement &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Surfaces:            Yes
+  Device has ECC support:                        Disabled
+  Device supports Unified Addressing &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UVA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:      Yes
+  Supports Cooperative Kernel Launch:            No
+  Supports MultiDevice Co-op Kernel Launch:      No
+  Device PCI Domain ID / Bus ID / location ID:   0 / 1 / 0
+  Compute Mode:
+ &amp;lt; Default &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;multiple host threads can use ::cudaSetDevice&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; with device simultaneously&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+ deviceQuery, CUDA Driver &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; CUDART, CUDA Driver Version &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 10.0, CUDA Runtime Version &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 9.0, NumDevs &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 1
+ Result &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; PASS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;troubleshooting&quot;&gt;Troubleshooting&lt;/h2&gt;
+&lt;p&gt;If you get stuck in the login loop by accidently installing nvidia driver with the bundled opengl library, uninstall the nvidia driver and cuda library by&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /usr/bin/nvidia-uninstall
+&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /usr/local/cuda-9.0/bin/uninstall_cuda_9.0.pl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;and then reboot. You are back to normal.&lt;/p&gt;
+
+&lt;h2 id=&quot;install-cudnn&quot;&gt;Install cuDNN&lt;/h2&gt;
+&lt;p&gt;Pretty easy!&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Join the &lt;a href=&quot;https://developer.nvidia.com/accelerated-computing-developer&quot;&gt;NVIDIA Developer Program&lt;/a&gt; and get the permission to download the cuDNN.&lt;/li&gt;
+  &lt;li&gt;Download the cuDNN from &lt;a href=&quot;https://developer.nvidia.com/rdp/cudnn-download&quot;&gt;here&lt;/a&gt;, select the deb version that matches cuda9.0:
+    &lt;ul&gt;
+      &lt;li&gt;cuDNN Runtime Library for Ubuntu16.04 (Deb):  &lt;code class=&quot;highlighter-rouge&quot;&gt;libcudnn7_7.4.2.24-1+cuda9.0_amd64.deb&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;cuDNN Developer Library for Ubuntu16.04 (Deb):  &lt;code class=&quot;highlighter-rouge&quot;&gt;libcudnn7-dev_7.4.2.24-1+cuda9.0_amd64.deb&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;cuDNN Code Samples and User Guide for Ubuntu16.04 (Deb): &lt;code class=&quot;highlighter-rouge&quot;&gt;libcudnn7-doc_7.4.2.24-1+cuda9.0_amd64.deb&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Install cuDNN by
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;dpkg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; libcudnn7_7.4.2.24-1+cuda9.0_amd64.deb
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;dpkg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; libcudnn7-dev_7.4.2.24-1+cuda9.0_amd64.deb
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;dpkg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; libcudnn7-doc_7.4.2.24-1+cuda9.0_amd64.deb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Testing
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /usr/src/cudnn_samples_v7/mnistCUDNN
+sudo make -j8
+./mnistCUDNN
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;You should get something like this if installed successfully&lt;/p&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cudnnGetVersion&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; : 7402 , CUDNN_VERSION from cudnn.h : 7402 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;7.4.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Host compiler version : GCC 5.5.0
+There are 1 CUDA capable devices on your machine :
+device 0 : sms  4  Capabilities 5.0, SmClock 1071.5 Mhz, MemSize &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Mb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 2004, MemClock 2505.0 Mhz, &lt;span class=&quot;nv&quot;&gt;Ecc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;boardGroupID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
+Using device 0
+Testing single precision
+Loading image data/one_28x28.pgm
+Performing forward propagation ...
+Testing cudnnGetConvolutionForwardAlgorithm ...
+Fastest algorithm is Algo 1
+Testing cudnnFindConvolutionForwardAlgorithm ...
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 0: 0.029920 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 0 memory
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 7: 1.930336 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 2057744 memory
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 1: 2.276768 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 3464 memory
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 5: 2.370656 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 203008 memory
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 2: 17.794369 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 57600 memory
+Resulting weights from Softmax:
+0.0000000 0.9999399 0.0000000 0.0000000 0.0000561 0.0000000 0.0000012 0.0000017 0.0000010 0.0000000
+Loading image data/three_28x28.pgm
+Performing forward propagation ...
+Resulting weights from Softmax:
+0.0000000 0.0000000 0.0000000 0.9999288 0.0000000 0.0000711 0.0000000 0.0000000 0.0000000 0.0000000
+Loading image data/five_28x28.pgm
+Performing forward propagation ...
+Resulting weights from Softmax:
+0.0000000 0.0000008 0.0000000 0.0000002 0.0000000 0.9999820 0.0000154 0.0000000 0.0000012 0.0000006
+Result of classification: 1 3 5
+Test passed!
+Testing half precision &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;math &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;single precision&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Loading image data/one_28x28.pgm
+Performing forward propagation ...
+Testing cudnnGetConvolutionForwardAlgorithm ...
+Fastest algorithm is Algo 1
+Testing cudnnFindConvolutionForwardAlgorithm ...
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 0: 0.025600 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 0 memory
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 1: 0.033376 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 3464 memory
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 4: 0.170336 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 207360 memory
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 7: 0.340768 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 2057744 memory
+^^^^ CUDNN_STATUS_SUCCESS &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Algo 5: 0.551552 &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;requiring 203008 memory
+Resulting weights from Softmax:
+0.0000001 1.0000000 0.0000001 0.0000000 0.0000563 0.0000001 0.0000012 0.0000017 0.0000010 0.0000001
+Loading image data/three_28x28.pgm
+Performing forward propagation ...
+Resulting weights from Softmax:
+0.0000000 0.0000000 0.0000000 1.0000000 0.0000000 0.0000714 0.0000000 0.0000000 0.0000000 0.0000000
+Loading image data/five_28x28.pgm
+Performing forward propagation ...
+Resulting weights from Softmax:
+0.0000000 0.0000008 0.0000000 0.0000002 0.0000000 1.0000000 0.0000154 0.0000000 0.0000012 0.0000006
+Result of classification: 1 3 5
+Test passed!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;install-tensorflow-gpu&quot;&gt;Install tensorflow-gpu&lt;/h2&gt;
+&lt;p&gt;Take the python3 from the system as an example:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;pip3 &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--upgrade&lt;/span&gt; tensorflow-gpu
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;test&quot;&gt;Test&lt;/h3&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python3
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; import tensorflow as tf
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; sess &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+tf.Session&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;tf.ConfigProto&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;log_device_placement&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;True&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The output should be something like this:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2019-01-07 22:54:32.219774: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-01-07 22:54:32.697484: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node &lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;from SysFS had negative value &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, but there must be at least one NUMA node, so returning NUMA node zero
+2019-01-07 22:54:32.697992: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties:
+name: Quadro M1000M major: 5 minor: 0 memoryClockRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;GHz&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: 1.0715
+pciBusID: 0000:01:00.0
+totalMemory: 1.96GiB freeMemory: 1.92GiB
+2019-01-07 22:54:32.698012: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 0
+2019-01-07 22:58:26.675975: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-01-07 22:58:26.676021: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      0
+2019-01-07 22:58:26.676036: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 0:   N
+2019-01-07 22:58:26.676508: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/job:localhost/replica:0/task:0/device:GPU:0 with 1683 MB memory&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; -&amp;gt; physical GPU &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;device: 0, name: Quadro M1000M, pci bus &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;: 0000:01:00.0, compute capability: 5.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Device mapping:
+/job:localhost/replica:0/task:0/device:XLA_GPU:0 -&amp;gt; device: XLA_GPU device
+/job:localhost/replica:0/task:0/device:XLA_CPU:0 -&amp;gt; device: XLA_CPU device
+/job:localhost/replica:0/task:0/device:GPU:0 -&amp;gt; device: 0, name: Quadro M1000M, pci bus &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;: 0000:01:00.0, compute capability: 5.0
+2019-01-07 22:58:26.678076: I tensorflow/core/common_runtime/direct_session.cc:307] Device mapping:
+/job:localhost/replica:0/task:0/device:XLA_GPU:0 -&amp;gt; device: XLA_GPU device
+/job:localhost/replica:0/task:0/device:XLA_CPU:0 -&amp;gt; device: XLA_CPU device
+/job:localhost/replica:0/task:0/device:GPU:0 -&amp;gt; device: 0, name: Quadro M1000M, pci bus &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;: 0000:01:00.0, compute capability: 5.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="gpu" /><summary type="html">Tested hardware and OS configuration: OS: Ubuntu 16.04 LTS NVIDIA Graphic Card: Quadro M1000M Cuda Version: 9.0 Graphic Card Driver Version: 410.xx Disable secure boot in BIOS setting</summary></entry><entry><title type="html">Use apt-get behind a socks5 proxy</title><link href="https://yuzhangbit.github.io/tools/use-apt-get-behind-socks5-proxy/" rel="alternate" type="text/html" title="Use apt-get behind a socks5 proxy" /><published>2018-11-23T00:00:00+08:00</published><updated>2018-11-23T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/use-apt-get-behind-socks5-proxy</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/use-apt-get-behind-socks5-proxy/">&lt;p&gt;Nothing would be more frustrating than to install apt packages from sources outside of China, especially from PPA.
+If you try to update the c++ compiler to &lt;code class=&quot;highlighter-rouge&quot;&gt;g++-6&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;g++-7&lt;/code&gt; through&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;add-apt-repository ppa:ubuntu-toolchain-r/test &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get update
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;g++-7 &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;it may takes your hours to get it done.&lt;/p&gt;
+
+&lt;p&gt;But if you have a socks5 proxy out there, things will become better. The idea is to use &lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get&lt;/code&gt; behind a socks5 proxy.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tsocks&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;proxychains&lt;/code&gt; are common-used tools for this purpose. Here I choose &lt;code class=&quot;highlighter-rouge&quot;&gt;proxychains&lt;/code&gt; over &lt;code class=&quot;highlighter-rouge&quot;&gt;tsocks&lt;/code&gt; due to the DNS issue of &lt;code class=&quot;highlighter-rouge&quot;&gt;tsocks&lt;/code&gt; mentioned by &lt;a href=&quot;https://serverfault.com/questions/754172/apt-get-maddeningly-doesnt-work-with-tsocks-proxy-set-up-with-ssh&quot;&gt;this&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;install &lt;code class=&quot;highlighter-rouge&quot;&gt;proxychains&lt;/code&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get install proxychains
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;setup for &lt;code class=&quot;highlighter-rouge&quot;&gt;proxychains&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/proxychains.conf&lt;/code&gt;&lt;br /&gt;
+Since my socks5 proxy server is running at &lt;code class=&quot;highlighter-rouge&quot;&gt;127.0.0.1&lt;/code&gt; through port &lt;code class=&quot;highlighter-rouge&quot;&gt;1080&lt;/code&gt;, my setting is
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;socks5 127.0.0.1 1080
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;at the last line of &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/proxychains.conf&lt;/code&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;using &lt;code class=&quot;highlighter-rouge&quot;&gt;proxychaines&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get&lt;/code&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;proxychains apt-get update
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;proxychains apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;g++-7 &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Done in minutes!&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;You can also use the proxychains for other software as below:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;proxychains synaptic
+proxychains julia
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="network" /><summary type="html">Nothing would be more frustrating than to install apt packages from sources outside of China, especially from PPA. If you try to update the c++ compiler to g++-6 or g++-7 through sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y sudo apt-get update sudo apt-get install g++-7 -y it may takes your hours to get it done.</summary></entry><entry><title type="html">Using Apollo Algorithms in Your Normal ROS Package</title><link href="https://yuzhangbit.github.io/tools/porting-apollo/" rel="alternate" type="text/html" title="Using Apollo Algorithms in Your Normal ROS Package" /><published>2018-10-12T00:00:00+08:00</published><updated>2018-10-12T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/porting-apollo</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/porting-apollo/">&lt;p&gt;This blog will introduce how the &lt;a href=&quot;https://github.com/yuzhangbit/port_apollo&quot;&gt;port_apollo&lt;/a&gt; repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.&lt;/p&gt;
+
+&lt;p&gt;The tested codes are based on the release &lt;a href=&quot;https://github.com/ApolloAuto/apollo/releases&quot;&gt;apollo-v3.0.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The goal of this project is to convert a bazel project to a cmake project while without modifying the algorithm part of source codes in apollo and keeping the existing directory structure unchanged. But the &lt;code class=&quot;highlighter-rouge&quot;&gt;#include&lt;/code&gt; directories in the source files somehow need to be adapted according to the structure of cmake projects. I am not going the split the header files and source files of apollo like typical cmake
+projects. I prefer keeping codes as it was to avoid copying files and moving directories. The rational behind this is that in this way I can easily checkout the contents of the module folder of new apollo release version and throw the existing &lt;code class=&quot;highlighter-rouge&quot;&gt;CMakeLists.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;package.xml&lt;/code&gt; to the updated codes and get a new working version with minimum effort.
+So the &lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt; directory won’t exist in every ROS package folder. But you can still include project header files like other normal ROS packages assuming the headers are there.&lt;/p&gt;
+
+&lt;h2 id=&quot;structure-of-the-port_apollo-repo&quot;&gt;Structure of the &lt;a href=&quot;https://github.com/yuzhangbit/port_apollo&quot;&gt;port_apollo&lt;/a&gt; Repo&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;port_apollo
+├── LICENSE
+├── README.md
+├── scripts
+│   ├── build_pkg.sh  &lt;span class=&quot;c&quot;&gt;# handy build script for ros workspace&lt;/span&gt;
+│   ├── docker_build_image.sh &lt;span class=&quot;c&quot;&gt;# docker image for CI, you can use it locally as well&lt;/span&gt;
+│   ├── docker_compile_pkgs.sh &lt;span class=&quot;c&quot;&gt;# repo-build script in docker container&lt;/span&gt;
+│   ├── Dockerfile   &lt;span class=&quot;c&quot;&gt;# base docker file to build a image: ubuntu 16.04 + ros kinetics&lt;/span&gt;
+│   ├── docker_install_dependencies.sh &lt;span class=&quot;c&quot;&gt;# install dependencies in the docker container&lt;/span&gt;
+│   ├── docker_run.sh  &lt;span class=&quot;c&quot;&gt;# run the docker for the CI test&lt;/span&gt;
+│   ├── installer  &lt;span class=&quot;c&quot;&gt;# dependencies install scripts go here&lt;/span&gt;
+│   └── tools  &lt;span class=&quot;c&quot;&gt;# tools scripts&lt;/span&gt;
+└── src
+    ├── catkin_simple  &lt;span class=&quot;c&quot;&gt;# dependencies, ros package&lt;/span&gt;
+    ├── glog_catkin  &lt;span class=&quot;c&quot;&gt;# dependencies, ros package&lt;/span&gt;
+    ├── cmake  &lt;span class=&quot;c&quot;&gt;# cmake module folder to hold FindProtobuf.cmake&lt;/span&gt;
+    ├── common  &lt;span class=&quot;c&quot;&gt;# apollo module, ros package &lt;/span&gt;
+    ├── planning &lt;span class=&quot;c&quot;&gt;# apollo module, to be done&lt;/span&gt;
+    ...
+    └── other_module_name &lt;span class=&quot;c&quot;&gt;# apollo module, to be done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;converting-steps&quot;&gt;Converting Steps&lt;/h3&gt;
+&lt;p&gt;Let’s create a new branch named &lt;code class=&quot;highlighter-rouge&quot;&gt;feature_catkinizing_module&lt;/code&gt; to hold the all the changes we are going to make. Pick a module named &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name&lt;/code&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;planning&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;control&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;routing&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;perception&lt;/code&gt;,…, etc. to convert.&lt;/p&gt;
+
+&lt;h4 id=&quot;1-create-a-working-branch-based-on-the-master-branch&quot;&gt;1. Create a working branch based on the master branch&lt;/h4&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git pull &lt;span class=&quot;c&quot;&gt;# pull the latest codes&lt;/span&gt;
+git checkout &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; feature_catkinizing_module &lt;span class=&quot;c&quot;&gt;# create a new branch locally&lt;/span&gt;
+git push &lt;span class=&quot;nt&quot;&gt;--set-upstream&lt;/span&gt; origin feature_catkinizing_module &lt;span class=&quot;c&quot;&gt;# push to the remote&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;2-get-the-source-codes-of-a-module&quot;&gt;2. Get the source codes of a module:&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Checkout a module &lt;br /&gt;
+This repo holds a copy of the source codes of &lt;a href=&quot;https://github.com/ApolloAuto/apollo/releases&quot;&gt;apollo-v3.0.0&lt;/a&gt; in branch &lt;code class=&quot;highlighter-rouge&quot;&gt;apollo_3_0_0&lt;/code&gt;. You can use the git command to checkout a folder from the branch &lt;code class=&quot;highlighter-rouge&quot;&gt;apollo_3_0_0&lt;/code&gt;.
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git checkout apollo_3_0_0 &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; module_name &lt;span class=&quot;c&quot;&gt;# copy the module_name folder from apollo_3_0_0 to current working branch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Modify the &lt;code class=&quot;highlighter-rouge&quot;&gt;#include&lt;/code&gt; directories in the header and source files in &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name&lt;/code&gt; directory&lt;br /&gt;
+All the original files include the &lt;code class=&quot;highlighter-rouge&quot;&gt;modules/module_name&lt;/code&gt; in the &lt;code class=&quot;highlighter-rouge&quot;&gt;#include&lt;/code&gt; lines. But in cmake projects, the prefix &lt;code class=&quot;highlighter-rouge&quot;&gt;modules/module_name&lt;/code&gt; is not needed. My solution is searching all the &lt;code class=&quot;highlighter-rouge&quot;&gt;.h&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.cc&lt;/code&gt; files for &lt;code class=&quot;highlighter-rouge&quot;&gt;modules/module_name/&lt;/code&gt; and replacing it with an empty string &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;&quot;&lt;/code&gt;. In &lt;code class=&quot;highlighter-rouge&quot;&gt;port_apollo&lt;/code&gt; repo, I provide a python script &lt;a href=&quot;https://github.com/yuzhangbit/port_apollo/blob/master/scripts/tools/content_hunter.py&quot;&gt;scripts/tools/content_hunter.py&lt;/a&gt; to do the work automatically.  The usage is as below:
+    &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;python&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scripts&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content_hunter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;module1_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;module2_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;The module names here can be &lt;code class=&quot;highlighter-rouge&quot;&gt;common&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;planning&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;control&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;perception&lt;/code&gt; etc.&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# for example 
+python scripts/tools/content_hunter.py common
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: The script only substitutes the string &lt;code class=&quot;highlighter-rouge&quot;&gt;modules/module_name/&lt;/code&gt;. If the file include &lt;code class=&quot;highlighter-rouge&quot;&gt;modules/other_module_name&lt;/code&gt;, you may need to remove it manually. Or improve the python script.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;3-add-ros-related-files-to-the-module_name-package&quot;&gt;3. Add ROS-related files to the &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name&lt;/code&gt; package&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create a test main file called &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name_tests.cc&lt;/code&gt; in the &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name&lt;/code&gt; folder. &lt;br /&gt;
+This file will call the test cases you are going to add in the &lt;code class=&quot;highlighter-rouge&quot;&gt;CMakeLists.txt&lt;/code&gt; file.
+    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;cp&quot;&gt;#include &amp;lt;gtest/gtest.h&amp;gt;
+&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InitGoogleTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RUN_ALL_TESTS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;CMakeLists.txt&lt;/code&gt;&lt;/p&gt;
+
+    &lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nb&quot;&gt;cmake_minimum_required&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;VERSION 3.0&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;project&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;module_name VERSION 0.0.1 LANGUAGES CXX&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# enable c++11　feature&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;CMAKE_CXX_STANDARD 11&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#  enable tests&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;CATKIN_ENABLE_TESTING ON&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# for protobuf to generated interfacing files&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;APPEND CMAKE_MODULE_PATH &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CMAKE_CURRENT_SOURCE_DIR&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/../cmake&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;###############&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#### set the catkin dependend packages&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;PKG_DEPS
+      glog_catkin
+      roscpp&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;find_package&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;catkin REQUIRED COMPONENTS &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PKG_DEPS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;find_package&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Protobuf REQUIRED&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# set the .proto definition files  &lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;PROTOS
+        path/to/file.proto &lt;span class=&quot;c1&quot;&gt;# relative to module_name folder   &lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# call the protobuf command to generate the header and source files&lt;/span&gt;
+  &lt;span class=&quot;nf&quot;&gt;PROTOBUF_GENERATE_CPP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;PROTO_SRCS PROTO_HDRS &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROTOS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Note: I write a custom cmake module called &lt;code class=&quot;highlighter-rouge&quot;&gt;FindProtobuf.cmake&lt;/code&gt; to find the protobuf library and related variables. It depends on &lt;code class=&quot;highlighter-rouge&quot;&gt;pkg_check_modules&lt;/code&gt; of the pkgconfig and protobuf.pc to find the right version and return below variables&lt;/p&gt;
+    &lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  PROTOBUF_INCLUDE_DIRS
+  PROTOBUF_LIBRARIES
+  RPOTOBUF_FOUND
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;It also provides a cutom cmake command &lt;code class=&quot;highlighter-rouge&quot;&gt;PROTOBUF_GENERATE_CPP&lt;/code&gt; to generate the header and source files for the &lt;code class=&quot;highlighter-rouge&quot;&gt;.proto&lt;/code&gt; definition files before compiling the library. Currently, the script does not install &lt;code class=&quot;highlighter-rouge&quot;&gt;.proto&lt;/code&gt; files to the shared folder like &lt;code class=&quot;highlighter-rouge&quot;&gt;catkin_ws/devel/share&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;catkin_ws/install/share&lt;/code&gt;. The generated files will mirror the &lt;code class=&quot;highlighter-rouge&quot;&gt;.proto&lt;/code&gt; directory structure in &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name&lt;/code&gt; folder. So if you need to use the generated header file of some &lt;code class=&quot;highlighter-rouge&quot;&gt;.proto&lt;/code&gt;, just include the &lt;code class=&quot;highlighter-rouge&quot;&gt;directory_to_proto&lt;/code&gt; file but replace the extension &lt;code class=&quot;highlighter-rouge&quot;&gt;.proto&lt;/code&gt; with the &lt;code class=&quot;highlighter-rouge&quot;&gt;.pb.h&lt;/code&gt;. For example, &lt;code class=&quot;highlighter-rouge&quot;&gt;#include &quot;common/configs/proto/vehicle_config.pb.h&quot;&lt;/code&gt; for &lt;code class=&quot;highlighter-rouge&quot;&gt;common/configs/proto/vehicle_config.proto&lt;/code&gt;. Of course, in the same package, you don’t need the module name &lt;code class=&quot;highlighter-rouge&quot;&gt;common&lt;/code&gt;.&lt;/p&gt;
+    &lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c1&quot;&gt;# global include directories&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;include_directories&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;catkin_INCLUDE_DIRS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROTOBUF_INCLUDE_DIRS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# use catkin_package command to expose the header files and the same directory structure to other catkin packages&lt;/span&gt;
+  &lt;span class=&quot;nf&quot;&gt;catkin_package&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;## export these folder sturcture in the package root folder to other catkin packages&lt;/span&gt;
+      INCLUDE_DIRS &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CATKIN_DEVEL_PREFIX&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/include
+      LIBRARIES &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# we are going to wrap all the algorithms to one library named by the module_name&lt;/span&gt;
+      CATKIN_DEPENDS &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PKG_DEPS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# set the source files for the library, you can select the source files you want to test in the module. Be careful with the dependencies. You can check the bazel build files for the dependency tree. You may need other module to be a catkin package first. In that case, convert other module first. Then add other modules as catkin dependencies to PKG_DEPS&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;SOURCES
+      path/to/source1.cc
+      path/to/source2.cc&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# add library target&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;add_library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SOURCES&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROTO_HDRS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROTO_SRCS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# set the include directory only for the target&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;target_include_directories&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+      PUBLIC
+        $&amp;lt;BUILD_INTERFACE:&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CATKIN_DEVEL_PREFIX&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/include&amp;gt;
+        $&amp;lt;BUILD_INTERFACE:&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CMAKE_CURRENT_SOURCE_DIR&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&amp;gt;
+      PRIVATE
+        $&amp;lt;BUILD_INTERFACE:&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CMAKE_CURRENT_BINARY_DIR&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&amp;gt;
+      &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# link the library&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;target_link_libraries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;catkin_LIBRARIES&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROTOBUF_LIBRARIES&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;CATKIN_ENABLE_TESTING&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nf&quot;&gt;catkin_add_gtest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;_tests
+          module_name_tests.cc
+          path/to/test1.cc
+          path/to/test2.cc&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;nb&quot;&gt;target_include_directories&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;_tests
+        PUBLIC
+          $&amp;lt;BUILD_INTERFACE:&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CATKIN_DEVEL_PREFIX&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/include&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&amp;gt;
+          $&amp;lt;BUILD_INTERFACE:&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CMAKE_CURRENT_SOURCE_DIR&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&amp;gt;
+        PRIVATE
+          $&amp;lt;BUILD_INTERFACE:&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CMAKE_CURRENT_BINARY_DIR&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&amp;gt;
+          &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;target_link_libraries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;_tests
+        &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;catkin_LIBRARIES&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+  &lt;span class=&quot;nb&quot;&gt;endif&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;CATKIN_ENABLE_TESTING&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+  &lt;span class=&quot;c1&quot;&gt;#############&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;## Install ##&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#############&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;## install the headers and directories&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;## don't miss any subfolders of the root, or you can't include the headers&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;## from other ros packages&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# take the `common` module for example&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DIRS proto math util time vehicle_state data configs adapters status transform_listener monitor_log kv_db filters&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# install all the headers to devel space since we export ${CATKIN_DEVEL_PREFIX}/include/&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# to catkin package instead of the include folder in the root&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DIRECTORY &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DIRS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+            DESTINATION &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CATKIN_DEVEL_PREFIX&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/include/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+            FILES_MATCHING PATTERN &lt;span class=&quot;s2&quot;&gt;&quot;*.h&quot;&lt;/span&gt;
+            PATTERN &lt;span class=&quot;s2&quot;&gt;&quot;.svn&quot;&lt;/span&gt; EXCLUDE
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# install the header files in the module_name root folder&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;FILES log.h macro.h
+            DESTINATION &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CATKIN_DEVEL_PREFIX&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/include/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# install all the headers to the install space, mirror the structure&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# install the generated headers&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DIRECTORY &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CMAKE_CURRENT_BINARY_DIR&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+            DESTINATION &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CATKIN_GLOBAL_INCLUDE_DESTINATION&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+            FILES_MATCHING PATTERN &lt;span class=&quot;s2&quot;&gt;&quot;*.h&quot;&lt;/span&gt;
+            PATTERN &lt;span class=&quot;s2&quot;&gt;&quot;.svn&quot;&lt;/span&gt; EXCLUDE
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# install all the headers to install space&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;DIRECTORY &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DIRS&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+            DESTINATION &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CATKIN_PACKAGE_INCLUDE_DESTINATION&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+            FILES_MATCHING PATTERN &lt;span class=&quot;s2&quot;&gt;&quot;*.h&quot;&lt;/span&gt;
+            PATTERN &lt;span class=&quot;s2&quot;&gt;&quot;.svn&quot;&lt;/span&gt; EXCLUDE
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# install header in the module_name root folder to install space&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;FILES log.h macro.h
+            DESTINATION &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CATKIN_PACKAGE_INCLUDE_DESTINATION&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;package.xml&lt;/code&gt;, should match the ros packages defined by &lt;code class=&quot;highlighter-rouge&quot;&gt;PKG_DEPS&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;CMakeLists.txt&lt;/code&gt;.&lt;/p&gt;
+
+    &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nt&quot;&gt;&amp;lt;package&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;format=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;2&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;module_name&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;apollo module_name module&lt;span class=&quot;nt&quot;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;maintainer&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;email=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;abc@abc.com&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;abc&lt;span class=&quot;nt&quot;&gt;&amp;lt;/maintainer&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;license&amp;gt;&lt;/span&gt;Apache 2.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/license&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.0.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;buildtool_depend&amp;gt;&lt;/span&gt;catkin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/buildtool_depend&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;depend&amp;gt;&lt;/span&gt;glog_catkin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/depend&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;depend&amp;gt;&lt;/span&gt;roscpp&lt;span class=&quot;nt&quot;&gt;&amp;lt;/depend&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/package&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;4-compile-and-test-in-port_apollo&quot;&gt;4. Compile and Test, in &lt;code class=&quot;highlighter-rouge&quot;&gt;port_apollo&lt;/code&gt;&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Build and run tests&lt;/p&gt;
+
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  catkin build
+  catkin build &lt;span class=&quot;nt&quot;&gt;--make-args&lt;/span&gt; tests
+  ./devel/lib/module_name/module_name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;5-call-the-algorithms-from-the-module_name-you-just-converted-in-your-catkin-package-my_package&quot;&gt;5. Call the algorithms from the &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name&lt;/code&gt; you just converted in your catkin package &lt;code class=&quot;highlighter-rouge&quot;&gt;my_package&lt;/code&gt;&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;CMakeLists.txt&lt;/p&gt;
+
+    &lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nb&quot;&gt;find_package&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;catkin REQUIRED COMPONENTS module_name&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nf&quot;&gt;catkin_package&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      CATKIN_DEPENDS module_name
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;package.xml&lt;/p&gt;
+
+    &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nt&quot;&gt;&amp;lt;package&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;format=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;2&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;my_package&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;my_package&lt;span class=&quot;nt&quot;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;maintainer&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;email=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;yu.zhang.bit@gmail.com&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Yu Zhang&lt;span class=&quot;nt&quot;&gt;&amp;lt;/maintainer&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;license&amp;gt;&lt;/span&gt;Apache 2.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/license&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.0.1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;buildtool_depend&amp;gt;&lt;/span&gt;catkin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/buildtool_depend&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;depend&amp;gt;&lt;/span&gt;module_name&lt;span class=&quot;nt&quot;&gt;&amp;lt;/depend&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/package&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Include headers from &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name&lt;/code&gt; package in the source files of your own package. Just follow the directory structure in &lt;code class=&quot;highlighter-rouge&quot;&gt;module_name&lt;/code&gt; package. You can also use clion IDE to help you find the headers automatically.&lt;/p&gt;
+
+    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;cp&quot;&gt;#include &amp;lt;module_name/subfolder/some_header.h&amp;gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A working example could be found in package &lt;a href=&quot;https://github.com/yuzhangbit/port_apollo/tree/master/src/common&quot;&gt;common&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pull requests for &lt;a href=&quot;https://github.com/yuzhangbit/port_apollo&quot;&gt;port_apollo&lt;/a&gt; are welcome!&lt;/p&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="Apollo" /><category term="ROS" /><category term="Programming" /><summary type="html">This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package in a native linux system (i.e. ubuntu 16.04 LTS) instead of docker environments.</summary></entry><entry><title type="html">Several Ways of Writing a ROS Node</title><link href="https://yuzhangbit.github.io/tools/several-ways-of-writing-a-ros-node/" rel="alternate" type="text/html" title="Several Ways of Writing a ROS Node" /><published>2018-10-01T00:00:00+08:00</published><updated>2018-10-01T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/several-ways-of-writing-a-ros-node</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/several-ways-of-writing-a-ros-node/">&lt;p&gt;The design of nodes varies according to the requirements of different applications. Selecting the right node pattern is pretty important for achieving certain goals.
+Here we mainly involve &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spin()&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spinOnce()&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;timer&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;single-thread node&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;multi-thread node&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;nodelet&lt;/code&gt; topics.&lt;/p&gt;
+
+&lt;h2 id=&quot;single-thread-node&quot;&gt;Single-thread Node&lt;/h2&gt;
+
+&lt;h3 id=&quot;rosspinonce-vs-rosspin&quot;&gt;ros::spinOnce vs ros::spin&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&quot;http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29&quot;&gt;ROS tutorials&lt;/a&gt; explain how to write a simple publisher and subscriber clearly, which also demonstrate the usage of &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spinOnce()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spin()&lt;/code&gt; respectively. Note that if you write a node the same as the example from the tutorials, don’t omit &lt;code class=&quot;highlighter-rouge&quot;&gt;spinOnce()&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;spin()&lt;/code&gt;, or you can’t trigger the callback functions of subscribers and timers. When nodes receive messages via topics or service, they do not process them immediately. All the callbacks are on-hold in a line until the &lt;code class=&quot;highlighter-rouge&quot;&gt;spinOnce()&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;spin()&lt;/code&gt; is called. These two &lt;code class=&quot;highlighter-rouge&quot;&gt;spins&lt;/code&gt; are slightly different.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spinOnce()&lt;/code&gt; asks ROS to execute all the pending callbacks of subscribers and timers once, then return control back to us. You can keep doing your work.&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;spinOnce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ask ROS to handle callbacks  &lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;doYourWork&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// this line will be executed&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spin()&lt;/code&gt; is like a button without going back, which means asking ROS to wait for and execute callbacks until the node shuts down. You fully give control to ROS.&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;spin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// ask ROS to handle callbacks&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;youWantToDoYourWork&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// this line will never be executed.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Roughly speaking, &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spin()&lt;/code&gt; is equivalent to the loop below:&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;spinOnce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thus, &lt;code class=&quot;highlighter-rouge&quot;&gt;spinOnce()&lt;/code&gt; gives you more control on when to process callbacks. You need to be aware of and control the time between two &lt;code class=&quot;highlighter-rouge&quot;&gt;spinOnce()&lt;/code&gt; by yourself and don’t let the callbacks be activated too late.  This is how publisher in tutorial use &lt;code class=&quot;highlighter-rouge&quot;&gt;spinOnce()&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::rate.sleep&lt;/code&gt; for repetitive work. In the simple subscriber, you don’t need to process information periodically, only callbacks need to be handled. For this case, &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spin()&lt;/code&gt; is enough.&lt;/p&gt;
+
+&lt;p&gt;But this doesn’t mean you can’t do periodic work by using &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spin()&lt;/code&gt;. By combining &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spin()&lt;/code&gt; with timers, you can also achieve the same goal as following codes:&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rate&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loop_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;doYourWork&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;spinOnce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;loop_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Timers are(have) callbacks as well, right?&lt;/p&gt;
+
+&lt;h3 id=&quot;class-node-pattern&quot;&gt;Class Node Pattern&lt;/h3&gt;
+&lt;p&gt;The way that the &lt;a href=&quot;http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29&quot;&gt;ROS tutorials&lt;/a&gt; write a node (I call it &lt;strong&gt;simple node pattern&lt;/strong&gt;) is clear and simple. But we want more – a more modular, clear, organized node structure.&lt;/p&gt;
+
+&lt;p&gt;Here is the &lt;strong&gt;class node pattern&lt;/strong&gt; I prefer in practice:
+&lt;img src=&quot;/assets/images/nodeclass.png&quot; alt=&quot;nodeclass&quot; /&gt;
+You can find the example node class codes in &lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/include/simple_node_class.hpp&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;demo/include/simple_node_class.hpp&lt;/code&gt;&lt;/a&gt; and &lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/src/simple_node_class.cpp&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;demo/src/simple_node_class.cpp&lt;/code&gt;&lt;/a&gt; in &lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern&quot;&gt;ros_node_pattern&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In &lt;code class=&quot;highlighter-rouge&quot;&gt;construtor&lt;/code&gt; you can pass in the ros node handle and private handle. You can define subscribers, publishers, timers, update parameters from servers, and bind the callbacks in &lt;code class=&quot;highlighter-rouge&quot;&gt;init()&lt;/code&gt; functions, do periodic work in &lt;code class=&quot;highlighter-rouge&quot;&gt;timerCallback()&lt;/code&gt; (for exmaple, publish a message  in a fixed rate the same as in the while loop), buffer or update incoming information in &lt;code class=&quot;highlighter-rouge&quot;&gt;subscriberCallback()&lt;/code&gt;. Then instantiate a node using the class as blow:&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;node_class.hpp&quot;
+#include &amp;lt;string&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;simple_class_node&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NodeHandle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NodeHandle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;NodeClass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ROS_INFO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Initialized a single-thread class node.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;spin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Seems readable, clean and elegant!&lt;/p&gt;
+
+&lt;p&gt;Although we encourage only updating or buffering information in the &lt;code class=&quot;highlighter-rouge&quot;&gt;subscriberCallback()&lt;/code&gt; and leaving computation-intensive work to the main loop or &lt;code class=&quot;highlighter-rouge&quot;&gt;timerCallback()&lt;/code&gt;, someone may do some heavy work that takes time in the callbacks on occasion. If you expect to publish a message in 10hz in the periodic loop while the &lt;code class=&quot;highlighter-rouge&quot;&gt;subscriberCallback()&lt;/code&gt; blocks for 200ms, your publishing rate is going to drop to 5hz for sure.&lt;br /&gt;
+This is caused by the single thread mode we use in the simple ros node with &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spin()&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::spinOnce()&lt;/code&gt;. The main loop and all the callbacks are running in a single thread in sequence. The publishing rate will be determined by the summation of time consumed by all the callbacks if the main loop rate is higher.&lt;/p&gt;
+
+&lt;p&gt;I provide such examples using both &lt;code class=&quot;highlighter-rouge&quot;&gt;spinOnce()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;spin()&lt;/code&gt; with above class node pattern in the &lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern/tree/master/demo&quot;&gt;demo&lt;/a&gt; package of &lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern&quot;&gt;ros_node_pattern&lt;/a&gt; repo.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/src/simple_node.cpp&quot;&gt;simple_node&lt;/a&gt;: &lt;code class=&quot;highlighter-rouge&quot;&gt;spinOnce()&lt;/code&gt; with a while loop implementation, &lt;strong&gt;simple node pattern&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/src/single_thread_node_instance.cpp&quot;&gt;single_thread_node_instance&lt;/a&gt;: &lt;code class=&quot;highlighter-rouge&quot;&gt;spin()&lt;/code&gt; with a timer in the node class implementaion, &lt;strong&gt;class node pattern&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Both periodic loops are set to 10hz. Three subscribers are defined to subscribing to the same topic. Each subscriber callback will block the program for 200ms. Then the publishing rate becomes 1.666hz(1/(0.2 + 0.2 + 0.2)hz) instead of 10hz.&lt;/p&gt;
+
+&lt;p&gt;Below are steps to recreate this result.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;clone the repo to your &lt;code class=&quot;highlighter-rouge&quot;&gt;catkin_ws/src&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;catkin build&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;roscore&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rosrun demo simple_node&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;rosrun demo single_thread_node_instance&lt;/code&gt; in another terminal.&lt;/li&gt;
+  &lt;li&gt;Check the publishing rate
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  rostopic hz /publisher
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;You should get 10hz roughly.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Now trigger the subscriber callbacks with a simple python publisher in &lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/scripts/sender.py&quot;&gt;demo/scripts/sender.py&lt;/a&gt;.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  python sender.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Now check the publishing rate again.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  rostopic hz /publisher
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;You should get 1.666hz roughly. You can also check the thread ID in the console as well.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;This toy example explain why we should only update information in subscriber callback functions rather than perform algorithm processing in callbacks of a single-thread ROS node.&lt;/p&gt;
+
+&lt;h2 id=&quot;multi-thread-node&quot;&gt;Multi-thread Node&lt;/h2&gt;
+&lt;p&gt;The limitation of single-thread node is pretty obvious. What if I have to spend some time in the subscriber callback functions? What if I want to have two timers in different spinning rate? The solution really comes down to the multi-thread version of ROS node.&lt;/p&gt;
+
+&lt;h3 id=&quot;multithreadedspinner-vs-asyncspinner&quot;&gt;MultiThreadedSpinner vs AsyncSpinner&lt;/h3&gt;
+&lt;p&gt;We can easily implement the multi-thread ros node using the same node class even without modifications when instantiating the node class with &lt;code class=&quot;highlighter-rouge&quot;&gt;MultiThreadedSpinner&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;AsyncSpinner&lt;/code&gt; as below.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MultiThreadedSpinner version in &lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/src/multi_thread_node_instance.cpp&quot;&gt;demo/src/multi_thread_node_instance.cpp&lt;/a&gt;
+    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;node_class.hpp&quot;
+#include &amp;lt;string&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;simple_class_node&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NodeHandle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NodeHandle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;NodeClass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ROS_INFO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Initialized a multi-thread node.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiThreadedSpinner&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// Use 4 threads&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ROS_INFO_STREAM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Main loop in thread:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;this_thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;spin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;AsyncSpinner version in &lt;a href=&quot;https://github.com/yuzhangbit/ros_node_pattern/blob/master/demo/src/async_multi_thread_node_instance.cpp&quot;&gt;demo/src/async_multi_thread_node_instance.cpp&lt;/a&gt;
+    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;node_class.hpp&quot;
+#include &amp;lt;string&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;simple_class_node&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NodeHandle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NodeHandle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;NodeClass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nh_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ROS_INFO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Initialized an async multi-thread node.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AsyncSpinner&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// Use 4 threads&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ROS_INFO_STREAM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Main loop in thread:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;this_thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;waitForShutdown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Both versions are multi-thread ros nodes. Now every callback gets a thread to use. Here are differences of &lt;code class=&quot;highlighter-rouge&quot;&gt;MultiThreadedSpinner&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;AsyncSpinner&lt;/code&gt; explained by &lt;a href=&quot;http://wiki.ros.org/roscpp/Overview/Callbacks%20and%20Spinning&quot;&gt;roscpp/Overview/Callbacks and Spinning&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;MultiThreadedSpinner&lt;/strong&gt; is a blocking spinner, similar to ros::spin(). You can specify a number of threads in its constructor, but if unspecified (or set to 0), it will use a thread for each CPU core.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A more useful threaded spinner is the &lt;strong&gt;AsyncSpinner&lt;/strong&gt;. Instead of a blocking spin() call, it has start() and stop() calls, and will automatically stop when it is destroyed.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AsyncSpinner&lt;/code&gt; provides more control to users than &lt;code class=&quot;highlighter-rouge&quot;&gt;MultiThreadedSpinner&lt;/code&gt;, which is similar to &lt;code class=&quot;highlighter-rouge&quot;&gt;spinOnce()&lt;/code&gt;. If you want to update the data of the node, you may need to put a mutex in your callback function. Another thing you need to note is that you need &lt;code class=&quot;highlighter-rouge&quot;&gt;ros::waitForShutdown()&lt;/code&gt; after the spinner.start() for &lt;code class=&quot;highlighter-rouge&quot;&gt;AsyncSpinner&lt;/code&gt;, or the ros node will only spin once.&lt;/p&gt;
+
+&lt;p&gt;To prove that the multi-thread versions are working, you can repeat steps above by replacing step 4 with &lt;code class=&quot;highlighter-rouge&quot;&gt;rosrun demo multi_thread_node_instance&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;rosrun demo async_multi_thread_node_instance&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You will get 10hz in step 5 and step 7. You can also check the thread ID of every callback function or the main loop.&lt;/p&gt;
+
+&lt;h2 id=&quot;nodelet-node-pattern&quot;&gt;Nodelet Node Pattern&lt;/h2&gt;
+&lt;p&gt;To be done.&lt;/p&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="ROS" /><category term="Programming" /><summary type="html">The design of nodes varies according to the requirements of different applications. Selecting the right node pattern is pretty important for achieving certain goals. Here we mainly involve ros::spin(), ros::spinOnce(), timer, single-thread node and multi-thread node and nodelet topics.</summary></entry><entry><title type="html">Highlighting an author’s name for CV using IEEEtran</title><link href="https://yuzhangbit.github.io/tools/highlighting-author-name-for-IEEEtran-style/" rel="alternate" type="text/html" title="Highlighting an author's name for CV using IEEEtran" /><published>2018-06-10T00:00:00+08:00</published><updated>2018-06-10T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/highlighting-author-name-for-IEEEtran-style</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/highlighting-author-name-for-IEEEtran-style/">&lt;p&gt;Highlighting a specific author’s name is useful and widely used in CV. But there is no elegant way to do it with existing latex packages.
+The &lt;strong&gt;IEEEtran.bst&lt;/strong&gt; style does not provide this functionality neither. There are many ways hacking the latex to achieve the goal. Many of them are error-prone,  only working for particular cases and not easy to understand.&lt;/p&gt;
+
+&lt;p&gt;Here is a solution that is relatively elegant, easy to understand and maintain. The main idea is to modify the &lt;code class=&quot;highlighter-rouge&quot;&gt;bst&lt;/code&gt; file, match the specific author’s name and then highlight it. Thus, no modification need to be done to the bib file.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;add a highlight function to the &lt;strong&gt;IEEEtran.bst&lt;/strong&gt; before &lt;code class=&quot;highlighter-rouge&quot;&gt;FUNCTION {format.names}&lt;/code&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FUNCTION {highlight.if.cv.author}
+{ duplicate$ purify$ &quot;Y. Zhang&quot; purify$ =
+ { &quot;\textbf{&quot; swap$ * &quot;}&quot; * }
+ 'skip$
+  if$
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: The command is trying to compare the string. So you need to provide the &lt;code class=&quot;highlighter-rouge&quot;&gt;Y. Zhang&lt;/code&gt; to the highlight function rather than &lt;code class=&quot;highlighter-rouge&quot;&gt;Zhang, Yu&lt;/code&gt; in bibtex entry.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;call &lt;code class=&quot;highlighter-rouge&quot;&gt;highlight.if.cv.author&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;FUNCTION {format.names}&lt;/code&gt; between &lt;code class=&quot;highlighter-rouge&quot;&gt;format.name$&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;bibinfo bibinfo.check&lt;/code&gt; as below
+    &lt;div class=&quot;language-tex highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FUNCTION &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;format.names&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 'bibinfo :=
+  duplicate&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt; 'skip&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+  this.to.prev.status
+  this.status.std
+  's :&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+  &quot;&quot; 't :&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+  #&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; 'nameptr :&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+  s num.names&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt; 'numnames :=
+  numnames 'namesleft :=
+ &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; namesleft #0 &amp;gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; s nameptr
+   name.format.string
+   format.name&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+   highlight.if.cv.author
+   bibinfo bibinfo.check
+   't :&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+   nameptr #&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &amp;gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; nameptr num.names.shown.with.forced.et.al #&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+       numnames max.num.names.before.forced.et.al &amp;gt;
+       is.forced.et.al and and
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &quot;others&quot; 't :&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+           #&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; 'namesleft :&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; skip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+       if&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+       namesleft #&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &amp;gt;
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &quot;, &quot; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; t do.name.latex.cmd &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; s nameptr &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;&quot; format.name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt; duplicate&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &quot;others&quot; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; 't :&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+           if&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+           t &quot;others&quot; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &quot; &quot; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; bbl.etal emphasize &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; numnames #&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &amp;gt;
+                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &quot;,&quot; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; skip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+               if&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+               bbl.and
+               space.word &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; t do.name.latex.cmd &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+           if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+       if&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; t do.name.latex.cmd &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+   if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;
+   nameptr #1 + 'nameptr :=
+   namesleft #1 - 'namesleft :=
+ &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  while&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;
+  cap.status.std
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt; if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;$&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;test in your tex file.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;\documentclass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;article&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;\begin{document}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\nocite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;*&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\bibliographystyle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;IEEEtran&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\bibliography&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;your&lt;span class=&quot;p&quot;&gt;_&lt;/span&gt;reference&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;\end{document}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="Latex" /><summary type="html">Highlighting a specific author’s name is useful and widely used in CV. But there is no elegant way to do it with existing latex packages. The IEEEtran.bst style does not provide this functionality neither. There are many ways hacking the latex to achieve the goal. Many of them are error-prone, only working for particular cases and not easy to understand.</summary></entry><entry><title type="html">Automatically host a gollum wiki with the supervisor</title><link href="https://yuzhangbit.github.io/tools/supervisor_setting/" rel="alternate" type="text/html" title="Automatically host a gollum wiki with the supervisor" /><published>2018-05-07T00:00:00+08:00</published><updated>2018-05-07T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/supervisor_setting</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/supervisor_setting/">&lt;p&gt;Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me.&lt;/p&gt;
+
+&lt;p&gt;Previously, I use service tools (such as systemd, upstart) coming with the Ubuntu system to automatically host the wiki when system starts.
+But sometimes you are not even sure which tool you system is using. Maybe both exist. And it seems not that simple to set up a service for a beginner.&lt;/p&gt;
+
+&lt;p&gt;Thus, I switch to the supervisor, a process control system, to manage the programs running in the background. So far, I am happy with it since it’s easy to install, configure and update. In addition, it provides a web gui to control the state of programs. What a nice feature to have!&lt;/p&gt;
+
+&lt;h2 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;rbenv&lt;/a&gt; (ruby version manager, avoid messing up with the ruby comes with the system)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;bundler&lt;/a&gt; (ruby application gem manaer, install and update gems with ease)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;gollum&lt;/a&gt;  (wiki engine)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;supervisor&lt;/a&gt; (Automatically host the wiki when the system starts, also provide a nice gui to control programs)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;/h2&gt;
+&lt;p&gt;Here is a simple gollum wiki template: &lt;a href=&quot;https://github.com/yuzhangbit/wiki_barebone.git&quot;&gt;https://github.com/yuzhangbit/wiki_barebone.git&lt;/a&gt; that we are going to use.&lt;/p&gt;
+
+&lt;p&gt;Run the install script in the repo. This install script has only been tested on ubuntu 14.04 LTS and 16.04 LTS.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/yuzhangbit/wiki_barebone.git
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;wiki_barebone  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;If it is your first time to install dependencies, please run commands below.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bash install.bash  &lt;span class=&quot;c&quot;&gt;# install dependencies, rbenv, bundler, gollum, supervisor, enable the web gui for supervisor&lt;/span&gt;
+bash setup.bash    &lt;span class=&quot;c&quot;&gt;# set up the autostart configuration for the wiki app&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you have already installed the dependencies, make your wiki automatically start using commands below,&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bash setup.bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;/h2&gt;
+&lt;p&gt;Open your browser and check the wiki out.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;localhost:8888
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;start-and-stop-wiki&quot;&gt;Start and Stop wiki&lt;/h4&gt;
+&lt;p&gt;This wiki will be hosted automatically when you start the ubuntu. You can control the program through commands below or web gui interfaces.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl start wiki     &lt;span class=&quot;c&quot;&gt;# start to host the wiki, the &quot;wiki&quot; is defined by the APP_NAME variable.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl restart wiki   &lt;span class=&quot;c&quot;&gt;# restart to host the wiki, the &quot;wiki&quot; is defined by the APP_NAME variable.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl stop wiki      &lt;span class=&quot;c&quot;&gt;# stop to host the wiki,  the &quot;wiki&quot; is defined by the APP_NAME variable.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;supervisor&quot;&gt;Supervisor&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: If you install &lt;code class=&quot;highlighter-rouge&quot;&gt;supervisor&lt;/code&gt; via &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt;, you probably can not generate a configuration file &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/supervisor/supervisord.conf&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/supervisor/conf.d&lt;/code&gt; folder. Even if you create the configuration file and directory for it manually, you are going to have trouble with &lt;code class=&quot;highlighter-rouge&quot;&gt;sockets&lt;/code&gt; when running &lt;code class=&quot;highlighter-rouge&quot;&gt;supervisorctl&lt;/code&gt; commands. So the &lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get install&lt;/code&gt; method is recommended.&lt;/p&gt;
+
+&lt;h2 id=&quot;configuration&quot;&gt;Configuration&lt;/h2&gt;
+&lt;p&gt;In order to manage all &lt;code class=&quot;highlighter-rouge&quot;&gt;programs&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;supervisor&lt;/code&gt; creates a &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/supervisor/conf.d&lt;/code&gt; directory to hold all the &lt;code class=&quot;highlighter-rouge&quot;&gt;.conf&lt;/code&gt; files for all the programs. In its &lt;code class=&quot;highlighter-rouge&quot;&gt;supervisord.conf&lt;/code&gt; file, it defines&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[include]
+files = /etc/supervisor/conf.d/*.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;folder to find all the &lt;code class=&quot;highlighter-rouge&quot;&gt;.conf&lt;/code&gt; files.  If this is missing, please add it manually.&lt;/p&gt;
+
+&lt;p&gt;An example &lt;code class=&quot;highlighter-rouge&quot;&gt;.conf&lt;/code&gt; file can be generated by &lt;code class=&quot;highlighter-rouge&quot;&gt;setup.bash&lt;/code&gt; script in &lt;a href=&quot;https://github.com/yuzhangbit/wiki_barebone&quot;&gt;https://github.com/yuzhangbit/wiki_barebone&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;enable-the-web-gui&quot;&gt;Enable the web gui&lt;/h3&gt;
+&lt;p&gt;The web gui tool for the supervisor can be enabled in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/supervisor/supervisord.conf&lt;/code&gt; by adding&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[inet_http_server]
+port = 127.0.0.1:9001
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;to &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/supervisor/supervisord.conf&lt;/code&gt;. This is done by the &lt;code class=&quot;highlighter-rouge&quot;&gt;install.bash&lt;/code&gt; script in &lt;a href=&quot;https://github.com/yuzhangbit/wiki_barebone&quot;&gt;https://github.com/yuzhangbit/wiki_barebone&lt;/a&gt;
+Then you can check the status of programs managed by the supervisor through &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:9001&lt;/code&gt; in web browser.&lt;/p&gt;
+
+&lt;h3 id=&quot;useful-commands-for-supervisor&quot;&gt;Useful Commands for Supervisor&lt;/h3&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl reload  &lt;span class=&quot;c&quot;&gt;# reload the supervisor.conf file and restart supervisor&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl reread &lt;span class=&quot;c&quot;&gt;# reread the .conf files for programs&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl udpate &lt;span class=&quot;c&quot;&gt;# update all the programs&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl start all &lt;span class=&quot;c&quot;&gt;# start all the programs&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="Automation" /><summary type="html">Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me.</summary></entry><entry><title type="html">rosparam_handler usage</title><link href="https://yuzhangbit.github.io/tools/ros-param-handler/" rel="alternate" type="text/html" title="rosparam_handler usage" /><published>2018-04-19T00:00:00+08:00</published><updated>2018-04-19T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/ros-param-handler</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/ros-param-handler/">&lt;p&gt;There are two ways to set parameters in ROS. One is loading parameter value from yaml files to the &lt;a href=&quot;http://wiki.ros.org/Parameter%20Server&quot;&gt;parameter_server&lt;/a&gt;. It’s not flexible to adjust the values of parameters on parameter_server on the fly.
+The parameters are passed to your app classes by the private ros node handle. You have to create the variables in the class to hold these values.&lt;/p&gt;
+
+&lt;p&gt;The second method is using &lt;code class=&quot;highlighter-rouge&quot;&gt;dynamic_reconfigure&lt;/code&gt;. You define types of parameters in a python file. Then the &lt;code class=&quot;highlighter-rouge&quot;&gt;dynamic_reconfigure&lt;/code&gt; tool will generate a header file that you can call directly. It seems like an interface file generated by IDL (Interface Definition Language) such as rosmsg and protobuf. You can adjust the values of parameters through the dynamic_reconfigure gui in rqt on the fly.
+Thus the parameter_server sounds like a static configuration tool and dynamic_reconfigure is a dynamic configuration tool for parameters.&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/cbandera/rosparam_handler&quot;&gt;rosparam_handler&lt;/a&gt; is a nice tool that unifies these two functionalities and makes these two types of parameters live in the same namespace to avoid redundancy.&lt;/p&gt;
+
+&lt;p&gt;The orignal tutorials did a great job in explaining the details in seperate tutorials. Here I want to present the necessary changes you need to do from a global perspective. Before diving into the details, please put the &lt;code class=&quot;highlighter-rouge&quot;&gt;rosparam_handler&lt;/code&gt; package in your &lt;code class=&quot;highlighter-rouge&quot;&gt;catkin_ws/src&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/cbandera/rosparam_handler
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Steps:&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Define the parameter types and properties in the &lt;code class=&quot;highlighter-rouge&quot;&gt;cfg/Some.params&lt;/code&gt; file. Note this file is used to generate header-only class that you can call. If you don’t have the &lt;code class=&quot;highlighter-rouge&quot;&gt;cfg&lt;/code&gt; folder, just create one using &lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir -p cfg&lt;/code&gt; in your package root folder.&lt;/p&gt;
+
+    &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+ &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;rosparam_handler.parameter_generator_catkin&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ParameterGenerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;int_param&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paramtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;int&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;An Integer parameter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;double_param&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paramtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;double&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A double parameter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;bool_param&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paramtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;bool&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A Boolean parameter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;vector_param&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paramtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;std::vector&amp;lt;double&amp;gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A vector parameter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;map_param&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paramtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;std::map&amp;lt;std::string,std::string&amp;gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A map parameter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;configurable_parameter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paramtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;double&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;This parameter can be set via dynamic_reconfigure&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configurable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dummy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paramtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;double&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;My Dummy parameter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;level&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;edit_method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configurable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;global_scope&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_enum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_enum&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;My first self written enum&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;entry_strings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Small&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Medium&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Large&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;ExtraLarge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Medium&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;generate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;package_name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;package_node&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;name_of_this_file&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;In order to make this params file usable it must be executable, so lets use the following command to make it excecutable&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; chmod +x Some.params
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;rosparam_handler&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;dynamic_reconfigure&lt;/code&gt; as dependencies in package.xml.&lt;/p&gt;
+
+    &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nt&quot;&gt;&amp;lt;depend&amp;gt;&lt;/span&gt;rosparam_handler&lt;span class=&quot;nt&quot;&gt;&amp;lt;/depend&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;&amp;lt;depend&amp;gt;&lt;/span&gt;dynamic_reconfigure&lt;span class=&quot;nt&quot;&gt;&amp;lt;/depend&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Configure the CMakelists.txt for it.
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c&quot;&gt;#########################&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;## step one&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;#########################&lt;/span&gt;
+  find_package&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;catkin REQUIRED COMPONENTS rosparam_handler dynamic_reconfigure&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# include, let the generated files find the needed headers in catkin packages&lt;/span&gt;
+  include_directories&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+   include
+   &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;catkin_INCLUDE_DIRS&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;#########################&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;## step two&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;#########################&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# note that this command has to go before the catkin_package command.&lt;/span&gt;
+  generate_ros_paramter_files&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+   cfg/Some.params    &lt;span class=&quot;c&quot;&gt;## for generating parameters header files&lt;/span&gt;
+   &lt;span class=&quot;c&quot;&gt;#cfg/someCfgFile.cfg   ## for generating dynamic configuration files&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;#########################&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;## step three&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;#########################&lt;/span&gt;
+  catkin_package&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+   CATKIN_DEPENDS rosparam_handler dynamic_reconfigure
+  &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# note: below commands are related to your own app.&lt;/span&gt;
+  add_executable&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;example_excutable
+   src/some.cpp&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  target_link_libraries&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;example_excutable
+   &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;some_libs&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;#########################&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;## step four&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;#########################&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# add dependencies, note that this command should go after an example build command like above&lt;/span&gt;
+  add_dependencies&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;example_executable &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;_genparam&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;## To generate SomeParamters.h file&lt;/span&gt;
+  add_dependencies&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;example_executable &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;_gencfg&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;## To generate SomeConfig.h file&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Once above steps done, you should be able to generate header-only classes for parameters or cfg to use.&lt;/p&gt;
+
+    &lt;p&gt;Note: you can’t actually find the generated header files in your package source folder. But you can see them in &lt;code class=&quot;highlighter-rouge&quot;&gt;catkin_ws/devel/include/package_name&lt;/code&gt; for ROS or &lt;code class=&quot;highlighter-rouge&quot;&gt;cmake-build-debug/devel/include/package_name&lt;/code&gt; for CLion like below&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; SomeParameters.h  # *Parameters.h, this file will hold a struct called &amp;lt;name&amp;gt;Paramters
+ SomeConfig.h      # *Config.h, this file will hold the normal dynamic_reconfigure Config struct.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;use the generated parameter struct in your ROS node class.
+    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;c1&quot;&gt;// include the header file&lt;/span&gt;
+ &lt;span class=&quot;cp&quot;&gt;#include &quot;package_name/SomeParameters.h&quot;
+&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// declare the instance in your class as a member&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;package_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SomeParameters&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;param_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Initialize your parameters from the parameter_server (YAML file loader) via the private ROS node handle.&lt;/p&gt;
+    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;n&quot;&gt;MyNodeClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MyNodeClass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+   &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;param_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ros&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NodeHandle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// use the private node handle. Please use getPrivateNodeHandle() for nodelets&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;param_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromParamServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;parameter_server&lt;/code&gt; does not create these values of parameter from nowhere. It actually loads these values from the YAML file through the roslaunch system as follows.&lt;/p&gt;
+
+    &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot;?&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;&amp;lt;launch&amp;gt;&lt;/span&gt;
+     &lt;span class=&quot;nt&quot;&gt;&amp;lt;arg&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;config&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;default=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$(find package_name)/launch/demo_params.yaml&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+     &lt;span class=&quot;nt&quot;&gt;&amp;lt;node&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;package_name&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;executable_type&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;node_name&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;args=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;output=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;screen&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;lt;rosparam&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;command=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;load&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;file=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$(arg config)&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+     &lt;span class=&quot;nt&quot;&gt;&amp;lt;/node&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;&amp;lt;/launch&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;The YMAL file may look like this.&lt;/p&gt;
+    &lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;na&quot;&gt;int_param&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;1&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;double_param&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;12.2&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;bool_param&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;True&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;vector_param&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;2.0&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;3.4&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;map_param&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;a&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;b&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;c&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;d&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.3&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;1&lt;/span&gt;
+ &lt;span class=&quot;na&quot;&gt;configurable_parameter&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;10.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;handy tool for modifying parameters on the fly.&lt;/p&gt;
+
+    &lt;p&gt;We are not done yet. If you define a parameter as a configurable object, then you can modity it on the fly just like the normal dynamic_reconfigure config parameter through rqt. You need to create a dynamic reconfiguration server to enable this feature.&lt;/p&gt;
+
+    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;cp&quot;&gt;#include &amp;lt;dynamic_reconfigure/server.h&amp;gt;
+&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MyNodeClass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;// dynamic reconfigure,&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;// the Package_name::SomeConfig is generated automatically&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;dynamic_reconfigure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Server&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;package_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SomeConfig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reconfigSrv_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Dynamic reconfiguration service&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;// define the callback&lt;/span&gt;
+   &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reconfigureRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;package_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SomeConfig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;uint32_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;The inplementation:&lt;/p&gt;
+    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyNodeClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reconfigureRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;package_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SomeConfig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uint&lt;/span&gt;
+   &lt;span class=&quot;mi&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;level&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;param_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Set the callback function to let &lt;code class=&quot;highlighter-rouge&quot;&gt;dynamic_reconfigure&lt;/code&gt; to modify the parameters.&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; reconfigSrv_.setCallback(boost::bind(&amp;amp;MyNodeClass::reconfigureRequest, this, _1, _2));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;Here is what a rqt gui for dynamic_reconfigure looks like.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/assets/images/rosparam_handler.png&quot; alt=&quot;rqt&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;Enjoy!&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="ROS" /><category term="Programming" /><summary type="html">There are two ways to set parameters in ROS. One is loading parameter value from yaml files to the parameter_server. It’s not flexible to adjust the values of parameters on parameter_server on the fly. The parameters are passed to your app classes by the private ros node handle. You have to create the variables in the class to hold these values.</summary></entry><entry><title type="html">Python binding</title><link href="https://yuzhangbit.github.io/tools/python-binding/" rel="alternate" type="text/html" title="Python binding" /><published>2017-03-28T00:00:00+08:00</published><updated>2017-03-28T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/python-binding</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/python-binding/">&lt;p&gt;Basically there are two ways to create python bindings for your ros libraries.
+One way is to start from scratch and shows all the necessary details to create the python interfaces for c++ libraries in CMakeLists.txt.
+You can find a working example from &lt;a href=&quot;https://github.com/luator/boost-python-catkin-example&quot;&gt;https://github.com/luator/boost-python-catkin-example&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The necessary step is lised below:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;find the boost python component and python libraries.&lt;/li&gt;
+  &lt;li&gt;catkin_python_setup()&lt;/li&gt;
+  &lt;li&gt;add_libraries()&lt;/li&gt;
+  &lt;li&gt;install the shared the libraries called by python interfaces to the place where python can find it.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The second way is to using the tool developed by ETHZ-ASL.
+Their tool use the catkin_simple() package to simplify the cmakelists script you need to write and hides all the details within
+their helper package–&lt;code class=&quot;highlighter-rouge&quot;&gt;python_module&lt;/code&gt;.  At a first glimpse, it’s very confusing. But if you understand how the first method works, you can
+basically create a tool similar to ASL’s, or even a better one.&lt;/p&gt;
+
+&lt;p&gt;The helper package is called &lt;code class=&quot;highlighter-rouge&quot;&gt;python_module&lt;/code&gt;. It provides a script function &lt;code class=&quot;highlighter-rouge&quot;&gt;add_python_export_library()&lt;/code&gt; that helps you to find
+the boost python component, python libraries folder, python include folder.  It also adds the libraries by invoking the
+native cmake command add_libraries() in their &lt;code class=&quot;highlighter-rouge&quot;&gt;python_module&lt;/code&gt; package. The ‘catkin_python_setup()’ is called as well.
+The ‘python_module’ marks the installed files as &lt;code class=&quot;highlighter-rouge&quot;&gt;ADDITIONAL_MAKE_CLEAN_FILES&lt;/code&gt;, which makes updating of the python module handy.&lt;/p&gt;
+
+&lt;p&gt;They have several assumptions when using their tool to create python bindings.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;The python interfaces are separated from c++ ros package as a new package.&lt;/li&gt;
+  &lt;li&gt;The python binding ros package names after the original c++ package with a suffix &lt;code class=&quot;highlighter-rouge&quot;&gt;_python&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;The name of the installed python module in dists-package will be the same as the c++ package.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;A typical example of their method can be found &lt;a href=&quot;https://github.com/ethz-asl/Schweizer-Messer/tree/master/sm_python&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The detailed instruction of ETHZ-ASL’s method can be found &lt;a href=&quot;https://github.com/ethz-asl/programming_guidelines/wiki/Adding-python-bindings-to-your-cpp-catkin-package&quot;&gt;here&lt;/a&gt;&lt;/p&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="ROS" /><category term="Programming" /><summary type="html">Basically there are two ways to create python bindings for your ros libraries. One way is to start from scratch and shows all the necessary details to create the python interfaces for c++ libraries in CMakeLists.txt. You can find a working example from https://github.com/luator/boost-python-catkin-example</summary></entry><entry><title type="html">Use Gtest with ROS</title><link href="https://yuzhangbit.github.io/tools/Use-Gtest-with-ROS/" rel="alternate" type="text/html" title="Use Gtest with ROS" /><published>2017-02-18T00:00:00+08:00</published><updated>2017-02-18T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/Use-Gtest-with-ROS</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/Use-Gtest-with-ROS/">&lt;p&gt;There are several interesting tips you need to know about catkin tools&lt;/p&gt;
+
+&lt;h3 id=&quot;configuration-for-catkin-workspace-using-caktin-tools&quot;&gt;Configuration for catkin workspace using caktin Tools&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;enable &lt;code class=&quot;highlighter-rouge&quot;&gt;-Wall -Wextra&lt;/code&gt; of the compiler to report potential coding bugs&lt;/li&gt;
+  &lt;li&gt;enable robust cleaning of individual packages with &lt;code class=&quot;highlighter-rouge&quot;&gt;linked&lt;/code&gt; layout , actually this is a default value of catkin_tools&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The configuration is below:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;catkin config --cmake-args -DCMAKE_CXX_FLAGS=&quot;-Wall -Wextra&quot; -DCMAKE_BUILD_TYPE=Release  
+catkin config --link-devel
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Build ros gtests using catkin_tools:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;catkin build --make-args tests
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;using-gtest-in-sub-directory-of-ros-packages&quot;&gt;Using gtest in sub-directory of ros packages.&lt;/h3&gt;
+
+&lt;h4 id=&quot;install-the-dependency-first&quot;&gt;Install the dependency first&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;libgtest-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;the-cmakeliststxt-codes-in-cmakelists&quot;&gt;The CMakeLists.txt codes in CMakeLists&lt;/h4&gt;
+&lt;p&gt;The the cmakelists structure should be&lt;/p&gt;
+
+&lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ros_package    
+  -launch      
+  -cfg     
+  -cmake      
+  -include     
+  -src     
+  -external_lib     
+    -include     
+    -src     
+    -doc     
+    -cmake     
+    -&lt;span class=&quot;nf&quot;&gt;tests&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;libraries tests&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;     
+      -CMakeLists.&lt;span class=&quot;nf&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;test cmakelists&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;     
+    -CMakeLists.&lt;span class=&quot;nf&quot;&gt;txt&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;libraries CMakeLists files&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;     
+  -&lt;span class=&quot;nf&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;ros tests&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;       
+  -CMakeLists.&lt;span class=&quot;nf&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;top level CMakeLists&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;      
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The test CMakeLists should be&lt;/p&gt;
+
+&lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;catkin_add_gtest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;test_name test1.cpp test2.cpp&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;nb&quot;&gt;target_link_libraries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;test_name &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;catkin_LIBRARIES&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="ROS" /><category term="Programming" /><summary type="html">There are several interesting tips you need to know about catkin tools</summary></entry><entry><title type="html">The Best IDE for ROS</title><link href="https://yuzhangbit.github.io/tools/The-Best-IDE-for-ROS/" rel="alternate" type="text/html" title="The Best IDE for ROS" /><published>2017-02-15T00:00:00+08:00</published><updated>2017-02-15T00:00:00+08:00</updated><id>https://yuzhangbit.github.io/tools/The-Best-IDE-for-ROS</id><content type="html" xml:base="https://yuzhangbit.github.io/tools/The-Best-IDE-for-ROS/">&lt;p&gt;I have tried &lt;a href=&quot;https://eclipse.org/&quot;&gt;Eclipse&lt;/a&gt;, &lt;a href=&quot;https://www.qt.io/ide/&quot;&gt;QtCreator&lt;/a&gt;, &lt;a href=&quot;https://www.jetbrains.com/clion/specials/clion/clion.html?&amp;amp;gclid=CjwKEAiAlZDFBRCKncm67qihiHwSJABtoNIgPAomPOm6xbKp2mfavGmu9fGtufYJ0GDqWtY7XtDNnhoC_q3w_wcB&amp;amp;gclsrc=aw.ds.ds&amp;amp;dclid=CO6L18X9ktICFQqtTwodZNEIDQ&quot;&gt;Clion&lt;/a&gt; for c++ software development in ROS.&lt;/p&gt;
+
+&lt;p&gt;CLion is my favorite IDE in terms of cmake based projects. For ROS or cmake based c++ projects, you can use clion out of box. If you have an university Email address, you can use CLion for free.  Here is the &lt;a href=&quot;https://www.jetbrains.com/student/&quot;&gt;registration link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Also &lt;a href=&quot;http://www.roboware.me/#/&quot;&gt;Roboware&lt;/a&gt; is a new star among &lt;a href=&quot;http://wiki.ros.org/IDEs&quot;&gt;IDEs for ROS&lt;/a&gt;. I haven’t try it out yet, so I can’t say much about it.&lt;/p&gt;
+
+&lt;p&gt;The explaination of the configuration of clion is coming soon.&lt;/p&gt;</content><author><name>Yu Zhang</name><email>yu.zhang.bit@gmail.com</email><uri>http://yuzhangbit.github.io</uri></author><category term="ROS" /><category term="Programming" /><summary type="html">I have tried Eclipse, QtCreator, Clion for c++ software development in ROS.</summary></entry></feed>

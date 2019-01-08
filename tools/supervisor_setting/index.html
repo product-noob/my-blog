@@ -1,0 +1,791 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.11.2 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Automatically host a gollum wiki with the supervisor - Yu Zhang’s Homepage</title>
+<meta name="description" content="Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Yu Zhang's Homepage">
+<meta property="og:title" content="Automatically host a gollum wiki with the supervisor">
+<meta property="og:url" content="https://yuzhangbit.github.io/tools/supervisor_setting/">
+
+
+  <meta property="og:description" content="Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-05-07T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://yuzhangbit.github.io/tools/supervisor_setting/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Yu Zhang",
+      "url": "https://yuzhangbit.github.io",
+      "sameAs": "https://yuzhangbit.github.io"
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Yu Zhang's Homepage Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KQ4PZJF');</script>
+<!-- End Google Tag Manager -->
+
+    <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Automatically host a gollum wiki with the supervisor | Yu Zhang’s Homepage</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Automatically host a gollum wiki with the supervisor" />
+<meta name="author" content="Yu Zhang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me." />
+<meta property="og:description" content="Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me." />
+<link rel="canonical" href="https://yuzhangbit.github.io/tools/supervisor_setting/" />
+<meta property="og:url" content="https://yuzhangbit.github.io/tools/supervisor_setting/" />
+<meta property="og:site_name" content="Yu Zhang’s Homepage" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-05-07T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Yu Zhang" />
+<script type="application/ld+json">
+{"description":"Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me.","author":{"@type":"Person","name":"Yu Zhang"},"@type":"BlogPosting","url":"https://yuzhangbit.github.io/tools/supervisor_setting/","headline":"Automatically host a gollum wiki with the supervisor","dateModified":"2018-05-07T00:00:00+08:00","datePublished":"2018-05-07T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://yuzhangbit.github.io/tools/supervisor_setting/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KQ4PZJF"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">Yu Zhang's Homepage</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/" >Home</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/videos/" >Videos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/projects_index/" >Projects</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/blogs/" >Blogs</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://github.com/yuzhangbit" >Codes</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/publications/" >Publications</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/about/" >CV</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="https://yuzhangbit.github.io/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="/categories/#tools" itemprop="item"><span itemprop="name">Tools</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Automatically host a gollum wiki with the supervisor</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/my_bio_s.jpg" alt="Yu Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yu Zhang</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        PhD student @ IVRC at Beijing Institute of Technology, visiting student @ WAVELab at University of Waterloo.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Beijing, China</span>
+        </li>
+      
+
+      
+        <li>
+          <a href="http://yuzhangbit.github.io" itemprop="url">
+            <i class="fas fa-fw fa-link" aria-hidden="true"></i> Website
+          </a>
+        </li>
+      
+
+      
+        <li>
+          <a href="mailto:yu.zhang.bit@gmail.com">
+            <meta itemprop="email" content="yu.zhang.bit@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/yuzhangbit" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        
+          <li>
+            <a href="https://www.youtube.com/user/UCsgiPR2CMjsWcrtFIXQS6EQ" itemprop="sameAs">
+              <i class="fab fa-fw fa-youtube" aria-hidden="true"></i> YouTube
+            </a>
+          </li>
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Automatically host a gollum wiki with the supervisor">
+    <meta itemprop="description" content="Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me.">
+    <meta itemprop="datePublished" content="May 07, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Automatically host a gollum wiki with the supervisor
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Gollum wiki plays an important role in my research and study for keeping small pieces of knowledge organized. When I want to write a note, or keep some useful links, I fire up a web browser and write them down in my wiki through the built-in web editor for markdown. Thus, hosting my wiki locally all the time is pretty important for me.</p>
+
+<p>Previously, I use service tools (such as systemd, upstart) coming with the Ubuntu system to automatically host the wiki when system starts.
+But sometimes you are not even sure which tool you system is using. Maybe both exist. And it seems not that simple to set up a service for a beginner.</p>
+
+<p>Thus, I switch to the supervisor, a process control system, to manage the programs running in the background. So far, I am happy with it since it’s easy to install, configure and update. In addition, it provides a web gui to control the state of programs. What a nice feature to have!</p>
+
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+  <li><a href="">rbenv</a> (ruby version manager, avoid messing up with the ruby comes with the system)</li>
+  <li><a href="">bundler</a> (ruby application gem manaer, install and update gems with ease)</li>
+  <li><a href="">gollum</a>  (wiki engine)</li>
+  <li><a href="">supervisor</a> (Automatically host the wiki when the system starts, also provide a nice gui to control programs)</li>
+</ul>
+
+<h2 id="installation">Installation</h2>
+<p>Here is a simple gollum wiki template: <a href="https://github.com/yuzhangbit/wiki_barebone.git">https://github.com/yuzhangbit/wiki_barebone.git</a> that we are going to use.</p>
+
+<p>Run the install script in the repo. This install script has only been tested on ubuntu 14.04 LTS and 16.04 LTS.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/yuzhangbit/wiki_barebone.git
+<span class="nb">cd </span>wiki_barebone  
+</code></pre></div></div>
+<p>If it is your first time to install dependencies, please run commands below.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash install.bash  <span class="c"># install dependencies, rbenv, bundler, gollum, supervisor, enable the web gui for supervisor</span>
+bash setup.bash    <span class="c"># set up the autostart configuration for the wiki app</span>
+</code></pre></div></div>
+
+<p>If you have already installed the dependencies, make your wiki automatically start using commands below,</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash setup.bash
+</code></pre></div></div>
+<h2 id="usage">Usage</h2>
+<p>Open your browser and check the wiki out.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>localhost:8888
+</code></pre></div></div>
+<h4 id="start-and-stop-wiki">Start and Stop wiki</h4>
+<p>This wiki will be hosted automatically when you start the ubuntu. You can control the program through commands below or web gui interfaces.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>supervisorctl start wiki     <span class="c"># start to host the wiki, the "wiki" is defined by the APP_NAME variable.</span>
+<span class="nb">sudo </span>supervisorctl restart wiki   <span class="c"># restart to host the wiki, the "wiki" is defined by the APP_NAME variable.</span>
+<span class="nb">sudo </span>supervisorctl stop wiki      <span class="c"># stop to host the wiki,  the "wiki" is defined by the APP_NAME variable.</span>
+</code></pre></div></div>
+
+<h3 id="supervisor">Supervisor</h3>
+<p><strong>NOTE</strong>: If you install <code class="highlighter-rouge">supervisor</code> via <code class="highlighter-rouge">pip</code>, you probably can not generate a configuration file <code class="highlighter-rouge">/etc/supervisor/supervisord.conf</code> and the <code class="highlighter-rouge">/etc/supervisor/conf.d</code> folder. Even if you create the configuration file and directory for it manually, you are going to have trouble with <code class="highlighter-rouge">sockets</code> when running <code class="highlighter-rouge">supervisorctl</code> commands. So the <code class="highlighter-rouge">apt-get install</code> method is recommended.</p>
+
+<h2 id="configuration">Configuration</h2>
+<p>In order to manage all <code class="highlighter-rouge">programs</code>, <code class="highlighter-rouge">supervisor</code> creates a <code class="highlighter-rouge">/etc/supervisor/conf.d</code> directory to hold all the <code class="highlighter-rouge">.conf</code> files for all the programs. In its <code class="highlighter-rouge">supervisord.conf</code> file, it defines</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[include]
+files = /etc/supervisor/conf.d/*.conf
+</code></pre></div></div>
+<p>folder to find all the <code class="highlighter-rouge">.conf</code> files.  If this is missing, please add it manually.</p>
+
+<p>An example <code class="highlighter-rouge">.conf</code> file can be generated by <code class="highlighter-rouge">setup.bash</code> script in <a href="https://github.com/yuzhangbit/wiki_barebone">https://github.com/yuzhangbit/wiki_barebone</a>.</p>
+
+<h3 id="enable-the-web-gui">Enable the web gui</h3>
+<p>The web gui tool for the supervisor can be enabled in <code class="highlighter-rouge">/etc/supervisor/supervisord.conf</code> by adding</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[inet_http_server]
+port = 127.0.0.1:9001
+</code></pre></div></div>
+<p>to <code class="highlighter-rouge">/etc/supervisor/supervisord.conf</code>. This is done by the <code class="highlighter-rouge">install.bash</code> script in <a href="https://github.com/yuzhangbit/wiki_barebone">https://github.com/yuzhangbit/wiki_barebone</a>
+Then you can check the status of programs managed by the supervisor through <code class="highlighter-rouge">localhost:9001</code> in web browser.</p>
+
+<h3 id="useful-commands-for-supervisor">Useful Commands for Supervisor</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>supervisorctl reload  <span class="c"># reload the supervisor.conf file and restart supervisor</span>
+<span class="nb">sudo </span>supervisorctl reread <span class="c"># reread the .conf files for programs</span>
+<span class="nb">sudo </span>supervisorctl udpate <span class="c"># update all the programs</span>
+<span class="nb">sudo </span>supervisorctl start all <span class="c"># start all the programs</span>
+</code></pre></div></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#automation" class="page__taxonomy-item" rel="tag">Automation</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#tools" class="page__taxonomy-item" rel="tag">Tools</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-05-07T00:00:00+08:00">May 07, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Automatically+host+a+gollum+wiki+with+the+supervisor%20https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fsupervisor_setting%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fsupervisor_setting%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fsupervisor_setting%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fyuzhangbit.github.io%2Ftools%2Fsupervisor_setting%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/tools/ros-param-handler/" class="pagination--pager" title="rosparam_handler usage
+">Previous</a>
+    
+    
+      <a href="/tools/highlighting-author-name-for-IEEEtran-style/" class="pagination--pager" title="Highlighting an author’s name for CV using IEEEtran
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a Comment</h4>
+      <section class="fb-comments" data-href="https://yuzhangbit.github.io/tools/supervisor_setting/" data-mobile="true" data-num-posts="10" data-width="100%" data-colorscheme="dark"></section>
+    
+</div>
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/nvidia-driver-and-cuda9-installation/" rel="permalink">Nvidia Driver and Cuda9.0 Installation
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  8 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Tested hardware and OS configuration:
+
+  OS: Ubuntu 16.04 LTS
+  NVIDIA Graphic Card: Quadro M1000M
+  Cuda Version: 9.0
+  Graphic Card Driver Version: 410.xx
+...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/use-apt-get-behind-socks5-proxy/" rel="permalink">Use apt-get behind a socks5 proxy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Nothing would be more frustrating than to install apt packages from sources outside of China, especially from PPA.
+If you try to update the c++ compiler to g...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/porting-apollo/" rel="permalink">Using Apollo Algorithms in Your Normal ROS Package
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  6 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This blog will introduce how the port_apollo repository converts an apollo module to a normal ROS package and uses Apollo algorithms in your own ros package ...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "/assets/images/default_teaser.jpg"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tools/several-ways-of-writing-a-ros-node/" rel="permalink">Several Ways of Writing a ROS Node
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">The design of nodes varies according to the requirements of different applications. Selecting the right node pattern is pretty important for achieving certai...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 Yu Zhang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118867307-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118867307-1', { 'anonymize_ip': false});
+</script>
+
+
+
+
+
+
+    <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  
+
+
+
+  </body>
+</html>

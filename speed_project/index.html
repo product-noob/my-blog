@@ -1,0 +1,818 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.11.2 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Convex-optimization-based Speed Planning - Yu Zhang’s Homepage</title>
+<meta name="description" content="for autonomous drving in both static and dynamic environments.">
+
+
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Yu Zhang's Homepage">
+<meta property="og:title" content="Convex-optimization-based Speed Planning">
+<meta property="og:url" content="https://yuzhangbit.github.io/speed_project/">
+
+
+  <meta property="og:description" content="for autonomous drving in both static and dynamic environments.">
+
+
+
+  <meta property="og:image" content="https://yuzhangbit.github.io/assets/images/ground_s.jpg">
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://yuzhangbit.github.io/speed_project/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Yu Zhang",
+      "url": "https://yuzhangbit.github.io",
+      "sameAs": "https://yuzhangbit.github.io"
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Yu Zhang's Homepage Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KQ4PZJF');</script>
+<!-- End Google Tag Manager -->
+
+    <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Convex-optimization-based Speed Planning | Yu Zhang’s Homepage</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Convex-optimization-based Speed Planning" />
+<meta name="author" content="Yu Zhang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="for autonomous drving in both static and dynamic environments." />
+<meta property="og:description" content="for autonomous drving in both static and dynamic environments." />
+<link rel="canonical" href="https://yuzhangbit.github.io/speed_project/" />
+<meta property="og:url" content="https://yuzhangbit.github.io/speed_project/" />
+<meta property="og:site_name" content="Yu Zhang’s Homepage" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Yu Zhang" />
+<script type="application/ld+json">
+{"description":"for autonomous drving in both static and dynamic environments.","author":{"@type":"Person","name":"Yu Zhang"},"@type":"WebPage","url":"https://yuzhangbit.github.io/speed_project/","headline":"Convex-optimization-based Speed Planning","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body class="layout--splash wide">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KQ4PZJF"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">Yu Zhang's Homepage</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/" >Home</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/videos/" >Videos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/projects_index/" >Projects</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/blogs/" >Blogs</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://github.com/yuzhangbit" >Codes</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/publications/" >Publications</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://yuzhangbit.github.io/about/" >CV</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style="background-color: #000; background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('/assets/images/ground_s.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Convex-optimization-based Speed Planning
+
+        
+      </h1>
+      
+        <p class="page__lead">for autonomous drving in both static and dynamic environments.
+</p>
+      
+      
+      
+    </div>
+  
+  
+    <span class="page__hero-caption">Photo credit: <a href="https://unsplash.com"><strong>Unsplash</strong></a>
+</span>
+  
+</div>
+
+
+
+<div id="main" role="main">
+  <article class="splash" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Convex-optimization-based Speed Planning">
+    <meta itemprop="description" content="for autonomous drving in both static and dynamic environments.">
+    
+    
+
+    <section class="page__content" itemprop="text">
+      <h2 id="speed-planning-for-autonomous-driving-in-static-and-dynamic-environments">Speed Planning for Autonomous Driving in Static and Dynamic Environments</h2>
+
+<h3 id="background">Background</h3>
+<figure style="width: 600px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/problem_demo.png" alt="" />
+  <figcaption>Speed Planning along a Fixed Path.</figcaption>
+</figure>
+<p>Speed planning plays an important role in guaranteeing the ride comfort and safety in autonomous driving applications. All different kind of scenarios together raises distinct requirements and consequently different constraint types for speed planning problem formulations, which makes it challenging to solve.</p>
+
+<figure class="half ">
+  
+    
+      <a href="/assets/images/speed_planning/jaywalking.png">
+        <img src="/assets/images/speed_planning/jaywalking.png" alt="" />
+      </a>
+    
+  
+    
+      <a href="/assets/images/speed_planning/merging.png">
+        <img src="/assets/images/speed_planning/merging.png" alt="" />
+      </a>
+    
+  
+  
+</figure>
+
+<figure style="width: 500px" class="align-center">
+    <img src="https://yuzhangbit.github.io/assets/images/speed_planning/cross.png" alt="" />
+    <figcaption></figcaption>
+  </figure>
+
+<p>We analyze the requirements of various driving scenarios for speed planning along the fixed path, summarize, and categorize constraints need to be addressed by speed planners as follows:</p>
+<figure style="width: 1000px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/constraint_type.png" alt="" />
+  <figcaption></figcaption>
+</figure>
+
+<p>We describe reasons why every constraint is needed to address speed planning problems in detail in our paper <a href="#zhang2018speed">[1], [2]</a>. We view these constraints as requirements for speed planner design and metrics to measure the capacity of the existing speed planners for autonomous driving.</p>
+
+<p>In light of this, we review the state-of-the-art speed planning methods and compare them with others in terms of constraints coverage, optimality, safety, flexibility, and capacity without revealing details, as seen in Table 2. Most of the existing methods just provided a workable speed profile rather than an optimal one for autonomous driving.  None of them covered all the constraints we list in the Table 1.</p>
+<figure style="width: 1000px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/capacity.png" alt="" />
+  <figcaption></figcaption>
+</figure>
+
+<h3 id="our-solution-and-highlights">Our Solution and Highlights</h3>
+
+<p>By taking some additional steps beyond the seminal work done by <a href="#verscheure2009time">[3], [4]</a>, we present a general speed planning framework specifically for autonomous driving that is able to handle a wide range of different scenarios using convex optimization subject to a large collection of relevant constraints. Our contributions are as follows:</p>
+<ul>
+  <li>
+    <p>We summarize the most common constraints raised in various autonomous driving scenarios as the <strong><em>requirements</em></strong> for speed planner design and <strong><em>metrics</em></strong> to measure the capacity of the existing speed planners roughly for autonomous driving. We clarify which constraints need to be addressed by speed planners to guarantee safety in general.</p>
+  </li>
+  <li>
+    <p>We present a more general, flexible and complete speed planning mathematical model including <strong><em>friction circle</em></strong> , <strong><em>dynamics</em></strong>, <strong><em>smoothness</em></strong>, <strong><em>time efficiency</em></strong>, <strong><em>time window</em></strong>, <strong><em>ride comfort</em></strong>, <strong><em>IoD</em></strong>, <strong><em>path and boundary conditions</em></strong> constraints compared to similar methods explained in <a href="#lipp2014minimum">[4], [5]</a>. We addressed the limitations of the method of Lipp <em>et al.</em> <a href="#lipp2014minimum">[4]</a> by introducing a <strong><em>pseudo jerk</em></strong> objective in longitudinal dimension to improve smoothness, adding time window constraints at certain point of the path to avoid dynamics obstacles, capping a path constraint (most-likely non-smooth) on speed decision variables to deal with task constraints like speed limits, imposing a boundary condition at the end point of the path to guarantee safety for precise stop or merging scenarios. Compared to the approach of Liu <em>et al.</em> <a href="#Liu2017">[5]</a>, our formulation optimizes the time efficiency directly while still staying inside of the friction circle, which ensures our method exploits the full acceleration capacity of the vehicle when necessary.</p>
+  </li>
+  <li>
+    <p>We introduce a semi-hard constraint concept to describe unique characters of the <strong><em>comfort box constraints</em></strong> and implement this kind of constraints using slack variables and penalty functions, which emphasizes comfort while guaranteeing fundamental motion safety without sacrificing the mobility of cars.  To the best of our knowledge, none of the existing methods handle these constraints like ours. In contrast, Refs <a href="#li2016real">[6], [7], [8], [9], [5]</a> regarded <em>comfort box constraints</em> as hard constraints, which dramatically reduces the solution space and in consequence limits the mobility of cars.</p>
+  </li>
+  <li>
+    <p>We demonstrate that our problem still preserves convexity with the added constraints, and hence, that the global optimality is guaranteed.  This means our problem can be solved using state-of-the-art convex optimization solvers efficiently as well.  We also provide some evidence to prove that our solution is able to keep consistent when the boundary conditions encounter some disturbances, which means only the part of results needed to be adjusted will be regulated due to the global optimality. This may benefit the track performance of speed controllers by providing a relative stable reference.  It is not the case for these methods that solve the speed planning problem using local optimization techniques like <a href="#Liu2017">[5]</a>. A small change of boundary conditions or initial guess may result in a totally different solution due to local minimas in their problem.</p>
+  </li>
+  <li>
+    <p>We showcase how our formulation can be used in various autonomous driving scenarios by providing several challenging case studies solved in our framework, such as safe stop on a curvy road with different entry speeds, dealing with jaywalking in two different ways and merging from a freeway entrance ramp to expressways with safety guaranteed.</p>
+  </li>
+</ul>
+
+<h3 id="abilities-of-our-method">Abilities of Our Method</h3>
+<ul>
+  <li>maintain the smoothness of the speed profile</li>
+  <li>driving within the limits of the friction cricle</li>
+  <li>achieve the time efficiency</li>
+  <li>cap a user-defined path constraint on the speed profile</li>
+  <li>control the arrival time at a certain point on the path (time window)</li>
+  <li>determine the end boundary condition of the state</li>
+  <li>align well with the user-defined speed profile while maintian smoothness and safety</li>
+  <li>dynamic obstacle avoidance</li>
+  <li>precise safe stop</li>
+</ul>
+
+<h3 id="featured-results">Featured Results</h3>
+
+<figure style="width: 1000px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/smoothness.png" alt="" />
+  <figcaption></figcaption>
+</figure>
+
+<figure style="width: 1000px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/boundary_condition.png" alt="" />
+  <figcaption></figcaption>
+</figure>
+<figure style="width: 1000px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/path_constraint.png" alt="" />
+  <figcaption></figcaption>
+</figure>
+
+<figure style="width: 1000px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/task_constraint.png" alt="" />
+  <figcaption></figcaption>
+</figure>
+
+<figure style="width: 800px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/semi_hard.png" alt="" />
+  <figcaption></figcaption>
+</figure>
+
+<figure style="width: 1000px" class="align-center">
+  <img src="https://yuzhangbit.github.io/assets/images/speed_planning/result_jay.png" alt="" />
+  <figcaption></figcaption>
+</figure>
+
+<h3 id="references">References</h3>
+
+<ol class="bibliography"><li><div class="text-justify"><span id="zhang2018speed">Yu Zhang, Huiyan Chen, Steven L. Waslander, Tian Yang, Sheng Zhang, Guangming Xiong, and Kai Liu, “<b>Toward a More Complete, Flexible, and Safer Speed Planning for Autonomous Driving via Convex Optimization</b>,” <i>Sensors (Switzerland)</i>, vol. 18, no. 7, p. 2185, 2018.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexzhang2018speed()">Bibtex</button>
+
+
+    <a href="http://doi.org/https://doi.org/10.3390/s18072185"><input class="doibtn" type="button" value="doi" /></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="azhang2018speed" style="display: none;">
+<pre>@article{zhang2018speed,
+  author = {Zhang, Yu and Chen, Huiyan and Waslander, Steven L. and Yang, Tian and Zhang, Sheng and Xiong, Guangming and Liu, Kai},
+  title = {{Toward a More Complete, Flexible, and Safer Speed Planning for Autonomous Driving via Convex Optimization}},
+  journal = {Sensors (Switzerland)},
+  year = {2018},
+  volume = {18},
+  pages = {2185},
+  number = {7},
+  doi = {https://doi.org/10.3390/s18072185}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexzhang2018speed(parameter) {
+    var x= document.getElementById('azhang2018speed');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li>
+<li><div class="text-justify"><span id="yzhang2018speed">Yu Zhang, Huiyan Chen, Steven L. Waslander, Tian Yang, Sheng Zhang, Guangming Xiong, and Kai Liu, “<b>Speed Planning for Autonomous Driving via Convex Optimization</b>,” in <i>IEEE International Conference on Intelligent Transportation Systems (ITSC)</i>, 2018, pp. 1–6.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexyzhang2018speed()">Bibtex</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="ayzhang2018speed" style="display: none;">
+<pre>@inproceedings{yzhang2018speed,
+  title = {Speed Planning for Autonomous Driving via Convex Optimization},
+  author = {Zhang, Yu and Chen, Huiyan and Waslander, Steven L. and Yang, Tian and Zhang, Sheng and Xiong, Guangming and Liu, Kai},
+  booktitle = {IEEE International Conference on Intelligent Transportation Systems (ITSC)},
+  pages = {1- 6},
+  note = {to appear},
+  year = {2018}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexyzhang2018speed(parameter) {
+    var x= document.getElementById('ayzhang2018speed');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li>
+<li><div class="text-justify"><span id="verscheure2009time">Diederik Verscheure, Bram Demeulenaere, Jan Swevers, Joris De Schutter, and Moritz Diehl, “<b>Time-optimal path tracking for robots: A convex optimization approach</b>,” <i>IEEE Transactions on Automatic Control</i>, vol. 54, no. 10, pp. 2318–2327, 2009.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexverscheure2009time()">Bibtex</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="averscheure2009time" style="display: none;">
+<pre>@article{verscheure2009time,
+  title = {Time-optimal path tracking for robots: A convex optimization approach},
+  author = {Verscheure, Diederik and Demeulenaere, Bram and Swevers, Jan and De Schutter, Joris and Diehl, Moritz},
+  journal = {IEEE Transactions on Automatic Control},
+  volume = {54},
+  number = {10},
+  pages = {2318--2327},
+  year = {2009},
+  publisher = {IEEE}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexverscheure2009time(parameter) {
+    var x= document.getElementById('averscheure2009time');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li>
+<li><div class="text-justify"><span id="lipp2014minimum">Thomas Lipp and Stephen Boyd, “<b>Minimum-time speed optimisation over a fixed path</b>,” <i>International Journal of Control</i>, vol. 87, no. 6, pp. 1297–1311, 2014.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexlipp2014minimum()">Bibtex</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="alipp2014minimum" style="display: none;">
+<pre>@article{lipp2014minimum,
+  title = {Minimum-time speed optimisation over a fixed path},
+  author = {Lipp, Thomas and Boyd, Stephen},
+  journal = {International Journal of Control},
+  volume = {87},
+  number = {6},
+  pages = {1297-1311},
+  year = {2014}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexlipp2014minimum(parameter) {
+    var x= document.getElementById('alipp2014minimum');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li>
+<li><div class="text-justify"><span id="Liu2017">Changliu Liu, Wei Zhan, and Masayoshi Tomizuka, “<b>Speed profile planning in dynamic environments via temporal optimization</b>,” in <i>IEEE Intelligent Vehicles Symposium (IV)</i>, 2017, pp. 154–159.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexLiu2017()">Bibtex</button>
+
+
+    <a href="http://doi.org/10.1109/IVS.2017.7995713"><input class="doibtn" type="button" value="doi" /></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="aLiu2017" style="display: none;">
+<pre>@inproceedings{Liu2017,
+  author = {Liu, Changliu and Zhan, Wei and Tomizuka, Masayoshi},
+  doi = {10.1109/IVS.2017.7995713},
+  isbn = {9781509048045},
+  booktitle = {IEEE Intelligent Vehicles Symposium (IV)},
+  pages = {154--159},
+  title = {{Speed profile planning in dynamic environments via temporal optimization}},
+  year = {2017}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexLiu2017(parameter) {
+    var x= document.getElementById('aLiu2017');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li>
+<li><div class="text-justify"><span id="li2016real">Xiaohui Li, Zhenping Sun, Dongpu Cao, Zhen He, and Qi Zhu, “<b>Real-time trajectory planning for autonomous urban driving: Framework, Algorithms, and Verifications</b>,” <i>IEEE/ASME Transactions on Mechatronics</i>, vol. 21, no. 2, pp. 740–753, 2016.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexli2016real()">Bibtex</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="ali2016real" style="display: none;">
+<pre>@article{li2016real,
+  title = {Real-time trajectory planning for autonomous urban driving: Framework, Algorithms, and Verifications},
+  author = {Li, Xiaohui and Sun, Zhenping and Cao, Dongpu and He, Zhen and Zhu, Qi},
+  journal = {IEEE/ASME Transactions on Mechatronics},
+  volume = {21},
+  number = {2},
+  pages = {740--753},
+  year = {2016},
+  publisher = {IEEE}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexli2016real(parameter) {
+    var x= document.getElementById('ali2016real');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li>
+<li><div class="text-justify"><span id="gu2013focused">Tianyu Gu, Jarrod Snider, John M Dolan, and Jin-woo Lee, “<b>Focused trajectory planning for autonomous on-road driving</b>,” in <i>IEEE Intelligent Vehicles Symposium (IV)</i>, 2013, pp. 547–552.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexgu2013focused()">Bibtex</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="agu2013focused" style="display: none;">
+<pre>@inproceedings{gu2013focused,
+  title = {Focused trajectory planning for autonomous on-road driving},
+  author = {Gu, Tianyu and Snider, Jarrod and Dolan, John M and Lee, Jin-woo},
+  booktitle = {IEEE Intelligent Vehicles Symposium (IV)},
+  pages = {547--552},
+  year = {2013}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexgu2013focused(parameter) {
+    var x= document.getElementById('agu2013focused');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li>
+<li><div class="text-justify"><span id="gu2015tunable">Tianyu Gu, Jason Atwood, Chiyu Dong, John M Dolan, and Jin-Woo Lee, “<b>Tunable and stable real-time trajectory planning for urban autonomous driving</b>,” in <i>IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)</i>, 2015, pp. 250–256.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexgu2015tunable()">Bibtex</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="agu2015tunable" style="display: none;">
+<pre>@inproceedings{gu2015tunable,
+  title = {Tunable and stable real-time trajectory planning for urban autonomous driving},
+  author = {Gu, Tianyu and Atwood, Jason and Dong, Chiyu and Dolan, John M and Lee, Jin-Woo},
+  booktitle = {IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  pages = {250--256},
+  year = {2015}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexgu2015tunable(parameter) {
+    var x= document.getElementById('agu2015tunable');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li>
+<li><div class="text-justify"><span id="gu2017improved">Tianyu Gu, “<b>Improved Trajectory Planning for On-Road Self-Driving Vehicles Via Combined Graph Search, Optimization &amp; Topology Analysis</b>,” PhD thesis, Carnegie Mellon University, 2017.</span></div>
+<button class="bibtexbtn" onclick="toggleBibtexgu2017improved()">Bibtex</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="agu2017improved" style="display: none;">
+<pre>@phdthesis{gu2017improved,
+  title = {Improved Trajectory Planning for On-Road Self-Driving Vehicles Via Combined Graph Search, Optimization \&amp; Topology Analysis},
+  author = {Gu, Tianyu},
+  year = {2017},
+  school = {Carnegie Mellon University}
+}
+</pre>
+</div>
+<script>
+function toggleBibtexgu2017improved(parameter) {
+    var x= document.getElementById('agu2017improved');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+</li></ol>
+
+<h3 id="resources">Resources</h3>
+<ul>
+  <li>ITSC 2018 <a href="/assets/pdfs/itsc2018_convex_speed_planning_slides.pdf">slides</a></li>
+</ul>
+
+    </section>
+  </article>
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 Yu Zhang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118867307-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118867307-1', { 'anonymize_ip': false});
+</script>
+
+
+
+
+
+
+    <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  
+
+
+
+  </body>
+</html>
