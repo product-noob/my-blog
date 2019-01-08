@@ -51,6 +51,10 @@ options nouveau modeset=0' > /etc/modprobe.d/blacklist-nouveau.conf"
 sudo update-initramfs -u
 ```
 If you get nothing output in the terminal by `lsmod | grep nouveau`, you are good to go.
+5. Purge the nvidia driver installed via PPA by
+```bash
+sudo apt-get purge nvidia*
+```
 
 ## Installation
 1. Kill the x-server by
@@ -86,7 +90,6 @@ Reboot or get back to the window mode by:
 ```bash
 sudo service lightdm start
 ```
-
 You should get similar outputs as below by `nvidia-smi` command:  
   ```bash
   Mon Jan  7 21:00:08 2019       
@@ -105,6 +108,13 @@ You should get similar outputs as below by `nvidia-smi` command:
   |=============================================================================|
   |  No running processes found                                                 |
   +-----------------------------------------------------------------------------+
+```
+6. Apply the patches if you need them (**optional**):
+```bash
+sudo ./cuda_9.0.176.1_linux.run  # accept and Enter
+sudo ./cuda_9.0.176.2_linux.run  # accept and Enter
+sudo ./cuda_9.0.176.3_linux.run  # accept and Enter
+sudo ./cuda_9.0.176.4_linux.run  # accept and Enter  
 ```
 
 ## Cuda Testing with Samples

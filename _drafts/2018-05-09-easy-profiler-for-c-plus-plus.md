@@ -39,4 +39,4 @@ target_link_libraries(app_for_profiling easy_profiler)
 ```
 Trick: have to put an `EASY_END_BLOCK` before the `profiler::dumpBlocksToFile("gd_profile.prof")`, or the gui can not open the profile file.
 
-If you want to disable the profiler, just compile the project 
+If you want to disable the profiler, just compile the project
