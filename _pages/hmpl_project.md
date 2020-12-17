@@ -13,13 +13,6 @@ header:
   #cta_url: "https://unsplash.com"
 
 
-feature_row:
-  - url: /assets/images/planner_s.jpg
-    #btn_label: "Read More"
-    #btn_class: "btn--primary"
-    #title: "Motion Planning Problem."
-    excerpt: Motion Planning Problems.
-    image_path: /assets/images/planner_s.jpg
 solutions:
   - url: /assets/images/planner_s.jpg
     image_path: /assets/images/planner_s.jpg
